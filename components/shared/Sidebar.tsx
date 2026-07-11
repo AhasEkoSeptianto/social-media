@@ -48,7 +48,7 @@ export function AppSidebar() {
 
   const handleLogout = () => {};
   return (
-    <Sidebar variant="sidebar">
+    <Sidebar>
       <SidebarHeader className="bg-[#0d0d12]">
         <p className="text-4xl py-4 text-highlight2 font-bold">Prism</p>
       </SidebarHeader>
@@ -62,9 +62,9 @@ export function AppSidebar() {
                   size="lg"
                   isActive={pathname === item.url}
                   className="
-                        hover:bg-[#1E1935]/50 hover:text-white
+                        hover:bg-[#1E1935]/50 hover:text-white text-highlight2
                         data-active:bg-[#1E1935]
-                        data-active:text-white
+                        data-active:text-highlight2
                         data-active:hover:bg-[#1E1935]
                         text-lg
                     "
@@ -86,9 +86,9 @@ export function AppSidebar() {
                   size="lg"
                   isActive={pathname === item.url}
                   className="
-                        hover:bg-[#1E1935]/50 hover:text-white
+                        hover:bg-[#1E1935]/50 hover:text-white text-highlight2
                         data-active:bg-[#1E1935]
-                        data-active:text-white
+                        data-active:text-highlight2
                         data-active:hover:bg-[#1E1935]
                         text-lg
                     "
