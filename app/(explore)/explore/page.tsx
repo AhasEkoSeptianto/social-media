@@ -49,6 +49,10 @@ export default function ExplorePage() {
         <div className="col-span-2"></div>
         <div className="col-span-9 container space-y-8">
           <div className="flex items-center justify-between">
+            <Field orientation="horizontal" className="bg-brand w-60">
+              <Input type="search" placeholder="Search people,tag,place" />
+              <Button>Search</Button>
+            </Field>
             <div className="flex flex-wrap items-center space-x-2">
               {tagMenu.map((tag, idx) => (
                 <Button
@@ -62,10 +66,6 @@ export default function ExplorePage() {
                 </Button>
               ))}
             </div>
-            <Field orientation="horizontal" className="bg-brand w-60">
-              <Input type="search" placeholder="Search people,tag,place" />
-              <Button>Search</Button>
-            </Field>
           </div>
 
           <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
@@ -82,6 +82,7 @@ export default function ExplorePage() {
                   className="object-cover"
                   alt={item.alt}
                   sizes="(max-width: 768px) 33vw, 300px"
+                  loading="eager"
                 />
                 {item.isVideo && (
                   <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
