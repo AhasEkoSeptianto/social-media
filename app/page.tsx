@@ -5,6 +5,10 @@ import StoryFeed from "@/components/shared/StoryFeed";
 import PostStory from "@/components/shared/PostStory";
 import Feed from "@/components/freatures/feed/feed";
 import { FeedTypes } from "@/type/components/features/feed";
+import { Input } from "@/components/ui/input";
+import { Field } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import TrendingSection from "@/components/shared/TrendingSection";
 
 const dummyFeed: FeedTypes[] = [
   {
@@ -54,8 +58,15 @@ export default function Home() {
             <Feed key={idx} {...feed} />
           ))}
         </div>
-        <div className="col-span-1"></div>
-        <div>right</div>
+
+        <div className=" col-span-2 py-4 space-y-4">
+          <Field orientation="horizontal" className="bg-brand">
+            <Input type="search" placeholder="Search in prism" />
+            <Button>Search</Button>
+          </Field>
+
+          <TrendingSection />
+        </div>
       </main>
     </SidebarProvider>
   );
