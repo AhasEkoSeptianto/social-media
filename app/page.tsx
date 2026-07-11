@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import TrendingSection from "@/components/shared/TrendingSection";
+import SuggestedSection from "@/components/shared/SuggestedSection";
 
 const dummyFeed: FeedTypes[] = [
   {
@@ -59,13 +60,33 @@ export default function Home() {
           ))}
         </div>
 
-        <div className=" col-span-2 py-4 space-y-4">
+        <div className=" col-span-3 py-4 space-y-4">
           <Field orientation="horizontal" className="bg-brand">
             <Input type="search" placeholder="Search in prism" />
             <Button>Search</Button>
           </Field>
 
           <TrendingSection />
+          <SuggestedSection />
+
+          <div className="flex items-center flex-wrap space-x-4 text-lg text-highlight2">
+            <p className="cursor-pointer hover:text-white">
+              <a>Privasi</a>
+            </p>
+            <p className="cursor-pointer hover:text-white">
+              <a>Trems</a>
+            </p>
+            <p className="cursor-pointer hover:text-white">
+              <a>Cookies</a>
+            </p>
+            <p className="cursor-pointer hover:text-white">
+              <a>Ads</a>
+            </p>
+            <p className="cursor-pointer hover:text-white">
+              <a>About</a>
+            </p>
+          </div>
+          <p className="text-sm text-highlight2">© 2026 Prism Inc.</p>
         </div>
       </main>
     </SidebarProvider>
