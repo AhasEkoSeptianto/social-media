@@ -30,7 +30,7 @@ export default function SuggestedSection() {
           <h1 className="text-lg">Suggested for you</h1>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-2">
         {dummySuggest.map((suggest, idx) => (
           <div className="flex items-center justify-between" key={idx}>
             <div className="flex items-center space-x-4">
