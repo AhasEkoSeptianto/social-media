@@ -50,7 +50,10 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="bg-[#0d0d12]">
-        <p className="text-4xl py-4 text-highlight2 font-bold">Prism</p>
+        <div className="py-4">
+          <p className="text-4xl  text-highlight2 font-bold">Prism</p>
+          <div className="h-1 w-14 rounded-full bg-gradient-to-r from-orange-500 to-purple-600" />
+        </div>
       </SidebarHeader>
       <SidebarContent className="bg-[#0d0d12] text-white">
         <SidebarGroup>

@@ -7,10 +7,12 @@
 @theme {
   --color-brand: #16151e;
   --color-brand2: #333447;
-
+  --color-brand3: #514361;
+  --color-brand4: #201c34;
+  --color-brand5: #7c5cfc;
   --color-highlight: #1e1935;
   --color-highlight2: #7c5cfc;
-  --color-highlight3: #7c5cfc;
+  --color-highlight3: #565b75;
 
   --color-success: #22c55e;
   --color-danger: #ef4444;
