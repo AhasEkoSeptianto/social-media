@@ -1,10 +1,27 @@
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AppWindowIcon, CodeIcon } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AppWindowIcon, Bookmark, CodeIcon, Grid2X2, Play } from "lucide-react";
 import Image from "next/image";
+interface ExploreItem {
+  id: string;
+  src: string;
+  alt: string;
+  isVideo?: boolean;
+  span?: "tall"; // buat item yang row-span-2
+}
 
+const items: ExploreItem[] = [
+  { id: "1", src: "/images/post1.avif", alt: "Mountain sunset", span: "tall" },
+  { id: "2", src: "/images/post2.avif", alt: "Green sofa" },
+  { id: "3", src: "/images/post3.avif", alt: "Restaurant dish", isVideo: true },
+  { id: "4", src: "/images/post4.avif", alt: "Dog closeup" },
+  { id: "5", src: "/images/post5.avif", alt: "Eiffel tower", isVideo: true },
+  { id: "6", src: "/images/post6.avif", alt: "Pool float" },
+  { id: "7", src: "/images/post7.avif", alt: "Ocean waves" },
+  { id: "8", src: "/images/post8.avif", alt: "Man portrait" },
+];
 export default function ProfilePage() {
   return (
     <SidebarProvider className="">
@@ -64,15 +81,67 @@ export default function ProfilePage() {
 
           <Tabs defaultValue="preview">
             <TabsList variant="line">
-              <TabsTrigger value="preview" className="data text-white">
-                <AppWindowIcon />
-                Preview
+              <TabsTrigger value="preview" className="data text-white text-lg">
+                <Grid2X2 />
+                Post
               </TabsTrigger>
-              <TabsTrigger value="code" className="text-white">
-                <CodeIcon />
-                Code
+              <TabsTrigger value="saved" className="text-white text-lg">
+                <Bookmark />
+                Saved
               </TabsTrigger>
             </TabsList>
+            <TabsContent value="preview">
+              <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`relative overflow-hidden rounded-lg bg-neutral-900 ${
+                      item.span === "tall" ? "row-span-2" : ""
+                    }`}
+                  >
+                    <Image
+                      src={item.src}
+                      fill
+                      className="object-cover"
+                      alt={item.alt}
+                      sizes="(max-width: 768px) 33vw, 300px"
+                      loading="eager"
+                    />
+                    {item.isVideo && (
+                      <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
+                        <Play className="h-3 w-3 fill-white text-white" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="saved">
+              <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
+                {items.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`relative overflow-hidden rounded-lg bg-neutral-900 ${
+                      item.span === "tall" ? "row-span-2" : ""
+                    } ${idx > 2 ? "hidden" : ""}`}
+                  >
+                    <Image
+                      src={item.src}
+                      fill
+                      className="object-cover"
+                      alt={item.alt}
+                      sizes="(max-width: 768px) 33vw, 300px"
+                      loading="eager"
+                    />
+                    {item.isVideo && (
+                      <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
+                        <Play className="h-3 w-3 fill-white text-white" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </main>
