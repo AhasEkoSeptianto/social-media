@@ -1,6 +1,14 @@
-import { Ellipse, Ellipsis, Phone, Plus, Video } from "lucide-react";
+import {
+  Ellipse,
+  Ellipsis,
+  Images,
+  Phone,
+  Plus,
+  Send,
+  Video,
+} from "lucide-react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import {
@@ -13,6 +21,8 @@ import {
 import { Message, MessageAvatar, MessageContent } from "../ui/message";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Bubble, BubbleContent } from "../ui/bubble";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
 
 const dummyChat = [
   {
@@ -64,6 +74,104 @@ const dummyChat = [
     time: "9:23 pm",
     status_read: false,
   },
+  {
+    id: 7,
+    sender_name: "Ariana",
+    message: "Hey! Did you see the sunset yesterday?",
+    avatar: "/images/person2.avif",
+    time: "9:12 pm",
+    status_read: true,
+  },
+  {
+    id: 8,
+    sender_name: "user",
+    message: "Yes!! That golden light was insane 😍?",
+    avatar: "/images/person1.avif",
+    time: "9:15 pm",
+    status_read: true,
+  },
+  {
+    id: 9,
+    sender_name: "Ariana",
+    message: "I got so many good shots. Spent like 3 hours up there haha",
+    avatar: "/images/person2.avif",
+    time: "9:17 pm",
+    status_read: true,
+  },
+  {
+    id: 10,
+    sender_name: "user",
+    message: "Worth it honestly. Where exactly was that spot?",
+    avatar: "/images/person1.avif",
+    time: "9:19 pm",
+    status_read: true,
+  },
+  {
+    id: 11,
+    sender_name: "Ariana",
+    message:
+      "Trail behind Millfield — takes about 40min. I'll send you the pin!",
+    avatar: "/images/person2.avif",
+    time: "9:21 pm",
+    status_read: true,
+  },
+  {
+    id: 12,
+    sender_name: "user",
+    message: "omg yes let's go this weekend",
+    avatar: "/images/person1.avif",
+    time: "9:23 pm",
+    status_read: false,
+  },
+  {
+    id: 13,
+    sender_name: "Ariana",
+    message: "Hey! Did you see the sunset yesterday?",
+    avatar: "/images/person2.avif",
+    time: "9:12 pm",
+    status_read: true,
+  },
+  {
+    id: 14,
+    sender_name: "user",
+    message: "Yes!! That golden light was insane 😍?",
+    avatar: "/images/person1.avif",
+    time: "9:15 pm",
+    status_read: true,
+  },
+  {
+    id: 15,
+    sender_name: "Ariana",
+    message: "I got so many good shots. Spent like 3 hours up there haha",
+    avatar: "/images/person2.avif",
+    time: "9:17 pm",
+    status_read: true,
+  },
+  {
+    id: 16,
+    sender_name: "user",
+    message: "Worth it honestly. Where exactly was that spot?",
+    avatar: "/images/person1.avif",
+    time: "9:19 pm",
+    status_read: true,
+  },
+  {
+    id: 17,
+    sender_name: "Ariana",
+    message:
+      "Trail behind Millfield — takes about 40min. I'll send you the pin!",
+    avatar: "/images/person2.avif",
+    time: "9:21 pm",
+    status_read: true,
+  },
+  {
+    id: 18,
+    sender_name: "user",
+    message: "omg yes let's go this weekend",
+    avatar: "/images/person1.avif",
+    time: "9:23 pm",
+    status_read: false,
+  },
 ];
 
 export default function ConversationMessage() {
@@ -99,7 +207,7 @@ export default function ConversationMessage() {
           </div>
         </CardHeader>
         <Separator className="mb-2 bg-white/10" />
-        <CardContent>
+        <CardContent className="overflow-hidden h-[39rem] ">
           <MessageScroller>
             <MessageScrollerViewport>
               <MessageScrollerContent
@@ -127,7 +235,9 @@ export default function ConversationMessage() {
                       </MessageAvatar>
                       <MessageContent>
                         <Bubble>
-                          <BubbleContent className="bg-red-500">
+                          <BubbleContent
+                            className={`${chat.sender_name === "user" ? "!bg-brand5" : "!bg-brand4"}  !text-white !text-md`}
+                          >
                             {chat.message}
                           </BubbleContent>
                         </Bubble>
@@ -139,6 +249,15 @@ export default function ConversationMessage() {
             </MessageScrollerViewport>
           </MessageScroller>
         </CardContent>
+        <CardFooter className="bg-brand flex items-start space-x-4">
+          <Button variant="outline">
+            <Images />
+          </Button>
+          <Input placeholder="message" />
+          <Button variant="outline">
+            <Send />
+          </Button>
+        </CardFooter>
       </Card>
     </MessageScrollerProvider>
   );
