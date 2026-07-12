@@ -63,7 +63,9 @@ export default function Home() {
         <div className=" col-span-3 py-4 space-y-4">
           <Field orientation="horizontal" className="bg-brand">
             <Input type="search" placeholder="Search in prism" />
-            <Button>Search</Button>
+            <Button variant="secondary" className="bg-brand5 cursor-pointer">
+              Search
+            </Button>
           </Field>
 
           <TrendingSection />

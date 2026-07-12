@@ -37,7 +37,7 @@ export default function PostStory() {
         </Button>
         <Button
           variant="secondary"
-          className="bg-highlight3 text-white font-bold hover:bg-highlight3 cursor-pointer"
+          className="bg-brand5 text-white font-bold hover:bg-highlight3 cursor-pointer"
         >
           Post
         </Button>

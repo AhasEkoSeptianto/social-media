@@ -63,7 +63,7 @@ export default function ActivityPage() {
                 3 New
               </Badge>
             </div>
-            <Button className="text-highlight2 cursor-pointer">
+            <Button variant="ghost" className="text-highlight2 cursor-pointer">
               Mark all as read
             </Button>
           </div>

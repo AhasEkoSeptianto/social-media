@@ -51,13 +51,15 @@ export default function ExplorePage() {
           <div className="flex items-center justify-between">
             <Field orientation="horizontal" className="bg-brand w-60">
               <Input type="search" placeholder="Search people,tag,place" />
-              <Button>Search</Button>
+              <Button variant="secondary" className="bg-brand5">
+                Search
+              </Button>
             </Field>
             <div className="flex flex-wrap items-center space-x-2">
               {tagMenu.map((tag, idx) => (
                 <Button
                   size="lg"
-                  variant={"default"}
+                  variant="secondary"
                   className={`rounded-full ${tag === selectedTag ? "bg-highlight2" : ""} cursor-pointer`}
                   key={idx}
                   onClick={() => setSelectedTag(tag)}

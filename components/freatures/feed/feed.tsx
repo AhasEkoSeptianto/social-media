@@ -38,15 +38,15 @@ export default function Feed(props: FeedTypes) {
         </div>
 
         <div>
-          <Button className="cursor-pointer text-lg">
+          <Button variant="ghost" className="cursor-pointer text-lg">
             <Heart size={40} />
             <p>{props.like}</p>
           </Button>
-          <Button className="cursor-pointer text-lg">
+          <Button variant="ghost" className="cursor-pointer text-lg">
             <MessageCircleMore size={40} />
             <p>{props.comment}</p>
           </Button>
-          <Button className="cursor-pointer text-lg">
+          <Button variant="ghost" className="cursor-pointer text-lg">
             <Share2 size={40} />
             <p>{props.share}</p>
           </Button>
