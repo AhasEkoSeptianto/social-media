@@ -39,8 +39,8 @@ const Menu1 = [
 ];
 
 const Menu2 = [
-  { title: "Saved", url: "/saved", icon: Bookmark },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Saved", url: "#", icon: Bookmark },
+  { title: "Settings", url: "#", icon: Settings },
 ];
 
 export function AppSidebar() {
