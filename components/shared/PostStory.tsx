@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Camera, Images } from "lucide-react";
 import { Button } from "../ui/button";

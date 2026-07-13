@@ -53,15 +53,9 @@ const dummyFeed: FeedTypes[] = [
 
 export default function Home() {
   const router = useRouter();
-  const { user, mutate, isLoading, isError, isLogin, isValidating } = useUser();
-  useEffect(() => {
-    if (!isLoading && !isLogin) {
-      router.push("/login");
-    }
-  }, [isLoading, isLogin]);
 
   return (
-    <SidebarProvider className={user?.name ? "" : "hidden"}>
+    <SidebarProvider>
       <AppSidebar />
       <main className="w-full grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
