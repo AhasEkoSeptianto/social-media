@@ -13,7 +13,6 @@ import { loginWithEmail, loginWithGoogle } from "@/lib/api/auth.api";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { mutate } = useUser();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -28,7 +27,6 @@ export default function LoginForm() {
     setServerError(null);
     try {
       await loginWithEmail(data);
-      await mutate();
       router.push("/");
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Login gagal");
@@ -39,7 +37,6 @@ export default function LoginForm() {
     setServerError(null);
     try {
       await loginWithGoogle(credential);
-      await mutate();
       router.push("/");
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Login Google gagal");

@@ -2,7 +2,7 @@ import { API_URL, fetcher } from "../fetcher";
 import { LoginFormData, RegisterFormData } from "../schemas/auth.schema";
 
 export async function loginWithGoogle(credential: string) {
-  const res = await fetch(`${API_URL}/api/auth/google`, {
+  const res = await fetch(`/api/auth/login/google`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

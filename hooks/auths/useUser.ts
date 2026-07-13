@@ -1,5 +1,4 @@
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
 
 interface User {
   id: string;
@@ -10,11 +9,30 @@ interface User {
 }
 
 export function useUser() {
+  const fetcher = async (url: string) => {
+    const res = await fetch(`${url}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const error = new Error("Terjadi kesalahan saat fetch data");
+      (error as any).status = res.status;
+      throw error;
+    }
+
+    return res.json();
+  };
+
   const { data, error, isLoading, mutate, isValidating } = useSWR<{
     success: boolean;
     user: User;
-  }>("/api/auth/me", fetcher, {
+  }>("/api/auth/check", fetcher, {
     shouldRetryOnError: false, // jangan retry kalau 401 (belum login)
+    refreshInterval: 5000,
   });
 
   return {
