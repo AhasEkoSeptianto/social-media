@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/shared/Sidebar";
@@ -10,6 +12,9 @@ import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import TrendingSection from "@/components/shared/TrendingSection";
 import SuggestedSection from "@/components/shared/SuggestedSection";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/auths/useUser";
 
 const dummyFeed: FeedTypes[] = [
   {
@@ -47,8 +52,16 @@ const dummyFeed: FeedTypes[] = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const { user, mutate, isLoading, isError, isLogin, isValidating } = useUser();
+  useEffect(() => {
+    if (!isLoading && !isLogin) {
+      router.push("/login");
+    }
+  }, [isLoading, isLogin]);
+
   return (
-    <SidebarProvider className="">
+    <SidebarProvider className={user?.name ? "" : "hidden"}>
       <AppSidebar />
       <main className="w-full grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>

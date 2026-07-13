@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { SWRConfig } from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { Toaster } from "@/components/ui/sonner";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,12 +34,7 @@ export default function RootLayout({
       className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Toaster />
-        <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-        >
-          <TooltipProvider>{children}</TooltipProvider>
-        </GoogleOAuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

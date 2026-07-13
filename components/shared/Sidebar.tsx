@@ -5,30 +5,29 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuAction,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
   Bell,
   Bookmark,
-  ChevronDown,
   Compass,
   Home,
-  House,
   LogOut,
   MessageCircleMore,
   Settings,
   UserRound,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Separator } from "../ui/separator";
+import { useUser } from "@/hooks/auths/useUser";
+import { useEffect } from "react";
+import { logout } from "@/lib/api/auth.api";
+import { useRouter } from "next/navigation";
 
 const Menu1 = [
   { title: "Home", url: "/", icon: Home },
@@ -44,9 +43,15 @@ const Menu2 = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
   const pathname = usePathname();
+  const { user, mutate } = useUser();
+  const handleLogout = async () => {
+    await logout();
+    await mutate();
+    router.push("/login");
+  };
 
-  const handleLogout = () => {};
   return (
     <Sidebar>
       <SidebarHeader className="bg-[#0d0d12]">
@@ -110,12 +115,14 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" className="hover:bg-[#1E1935]/50">
               <Avatar className="h-8 w-8 rounded-full">
-                <AvatarImage src="" alt="Alex Mercer" />
+                <AvatarImage src={user?.avatarUrl} alt={user?.name} />
                 <AvatarFallback>AM</AvatarFallback>
               </Avatar>
               <div className="flex flex-col leading-tight">
-                <span className="font-semibold text-white">Alex Mercer</span>
-                <span className="text-xs text-neutral-400">@my.profile</span>
+                <span className="font-semibold text-white">{user?.name}</span>
+                <span className="text-xs text-neutral-400">
+                  {user?.username}
+                </span>
               </div>
             </SidebarMenuButton>
             <SidebarMenuAction

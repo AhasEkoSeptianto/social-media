@@ -6,10 +6,11 @@ interface User {
   email: string;
   name: string;
   avatarUrl?: string;
+  username?: string;
 }
 
 export function useUser() {
-  const { data, error, isLoading, mutate } = useSWR<{
+  const { data, error, isLoading, mutate, isValidating } = useSWR<{
     success: boolean;
     user: User;
   }>("/api/auth/me", fetcher, {
@@ -20,6 +21,8 @@ export function useUser() {
     user: data?.user,
     isLoading,
     isError: error,
+    isLogin: !!data?.user,
     mutate, // panggil ini setelah login/logout untuk refresh data
+    isValidating,
   };
 }

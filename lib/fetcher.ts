@@ -7,7 +7,7 @@ type ApiOptions = {
   headers?: Record<string, string>;
 };
 
-export const fetcher = async (url: string, options: ApiOptions) => {
+export const fetcher = async (url: string, options: ApiOptions = {}) => {
   const res = await fetch(`${API_URL}${url}`, {
     method: options.method ?? "GET",
     credentials: "include",

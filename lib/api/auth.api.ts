@@ -22,8 +22,6 @@ export async function loginWithEmail(data: LoginFormData) {
     method: "POST",
     body: data,
   });
-
-  console.log(res);
 }
 
 export async function registerAccount(data: RegisterFormData) {
@@ -31,6 +29,10 @@ export async function registerAccount(data: RegisterFormData) {
     method: "POST",
     body: data,
   });
+}
 
-  console.log(res);
+export async function logout() {
+  const res = await fetcher("/api/auth/logout", {
+    method: "POST",
+  });
 }
