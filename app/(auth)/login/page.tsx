@@ -1,9 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Marker, MarkerContent } from "@/components/ui/marker";
-import Image from "next/image";
+"use client";
+
+import LoginForm from "@/components/forms/LoginForm";
+import RegisterForm from "@/components/forms/RegisterForm";
+import { useState } from "react";
 
 export default function Page() {
+  const [authPage, setAuthPage] = useState<"login" | "register">("login");
+
+  const ChangeFormAuth = () => {
+    setAuthPage((prev) => (prev === "login" ? "register" : "login"));
+  };
   return (
     <div className="grid lg:grid-cols-12">
       <div className="col-span-8 relative">
@@ -19,38 +25,34 @@ export default function Page() {
         </div>
       </div>
       <div className="col-span-4 bg-brand">
-        <div className="grid w-full place-content-center h-screen space-y-6 absolute top-0 z-90 lg:relative p-6 lg:p-0">
-          <div className="text-center">
-            <h1 className="font-bold text-4xl">Welcome</h1>
-            <p className="text-white/50">Sign in to see what's happening.</p>
-          </div>
-          <div className="">
-            <Button variant="outline" className="w-full" size="lg">
-              <Image
-                src="/images/google.png"
-                width={30}
-                height={30}
-                className="w-auto h-auto"
-                alt="google"
-              />
-              <span>Continue with Goggle</span>
-            </Button>
-          </div>
-          <Marker variant="separator">
-            <MarkerContent>or continue with email</MarkerContent>
-          </Marker>
-          <form className="space-y-4">
-            <Input placeholder="Email adress" name="email" />
-            <Input placeholder="Password" name="password" type="password" />
-            <p className="text-right text-sm opacity-80">forgot password?</p>
-            <Button
-              className="text-lg w-full bg-brand5 cursor-pointer"
-              variant="secondary"
-              size="lg"
-            >
-              Sign in
-            </Button>
-          </form>
+        <div className="grid w-full place-content-center h-screen absolute top-0 z-90 lg:relative  lg:p-0">
+          {authPage === "login" ? (
+            <div>
+              <LoginForm />
+              <p className="text-center">
+                Don't have an account?{" "}
+                <span
+                  className="text-brand5 cursor-pointer"
+                  onClick={ChangeFormAuth}
+                >
+                  Create one
+                </span>
+              </p>
+            </div>
+          ) : (
+            <div>
+              <RegisterForm onSuccess={() => setAuthPage("login")} />
+              <p className="text-center">
+                Already have an account?{" "}
+                <span
+                  className="text-brand5 cursor-pointer"
+                  onClick={ChangeFormAuth}
+                >
+                  Sign in
+                </span>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
