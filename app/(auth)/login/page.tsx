@@ -25,34 +25,36 @@ export default function Page() {
         </div>
       </div>
       <div className="col-span-4 bg-brand">
-        <div className="grid w-full place-content-center h-screen absolute top-0 z-90 lg:relative  lg:p-0">
-          {authPage === "login" ? (
-            <div>
-              <LoginForm />
-              <p className="text-center">
-                Don't have an account?{" "}
-                <span
-                  className="text-brand5 cursor-pointer"
-                  onClick={ChangeFormAuth}
-                >
-                  Create one
-                </span>
-              </p>
-            </div>
-          ) : (
-            <div>
-              <RegisterForm onSuccess={() => setAuthPage("login")} />
-              <p className="text-center">
-                Already have an account?{" "}
-                <span
-                  className="text-brand5 cursor-pointer"
-                  onClick={ChangeFormAuth}
-                >
-                  Sign in
-                </span>
-              </p>
-            </div>
-          )}
+        <div className="grid w-full place-content-center h-screen absolute top-0 z-90 lg:relative">
+          <div className="p-6 lg:p-0">
+            {authPage === "login" ? (
+              <div>
+                <LoginForm />
+                <p className="text-center">
+                  Don't have an account?{" "}
+                  <span
+                    className="text-brand5 cursor-pointer"
+                    onClick={ChangeFormAuth}
+                  >
+                    Create one
+                  </span>
+                </p>
+              </div>
+            ) : (
+              <div>
+                <RegisterForm onSuccess={() => setAuthPage("login")} />
+                <p className="text-center">
+                  Already have an account?{" "}
+                  <span
+                    className="text-brand5 cursor-pointer"
+                    onClick={ChangeFormAuth}
+                  >
+                    Sign in
+                  </span>
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

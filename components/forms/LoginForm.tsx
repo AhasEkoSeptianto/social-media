@@ -45,7 +45,7 @@ export default function LoginForm() {
 
   return (
     <div>
-      <div className="w-[30rem] space-y-6 p-6">
+      <div className="lg:w-[30rem] space-y-6 p-6">
         <div className="text-center">
           <h1 className="font-bold text-4xl">Welcome</h1>
           <p className="text-white/50">Sign in to see what's happening.</p>
