@@ -14,41 +14,43 @@ export default function Feed(props: FeedTypes) {
     <Card className="bg-brand text-white">
       <CardHeader className="flex items-center space-x-4">
         <Image
-          src={props.profile_pict}
+          src={props.author.avatarUrl}
           width={40}
           height={40}
           alt="prof"
           className="rounded-full"
         />
         <div>
-          <p className="text-lg">{props.users}</p>
-          <p className="opacity-50">{props.time}</p>
+          <p className="text-lg">{props.author.name}</p>
+          <p className="opacity-50">{props.createdAt}</p>
         </div>
       </CardHeader>
       <CardContent className="bg-brand space-y-4">
-        <p>{props.post_text}</p>
-        <div className="relative w-full h-96 overflow-hidden">
-          <Image
-            className="rounded"
-            src={props.post_image}
-            fill
-            alt="prof"
-            sizes="(max-width: 768px) 100vw, 500px"
-          />
-        </div>
+        <p>{props.postContext}</p>
+        {props.images ? (
+          <div className="relative w-full h-96 overflow-hidden">
+            <Image
+              className="rounded"
+              src={props.images}
+              fill
+              alt="prof"
+              sizes="(max-width: 768px) 100vw, 500px"
+            />{" "}
+          </div>
+        ) : null}
 
         <div>
           <Button variant="ghost" className="cursor-pointer text-lg">
             <Heart size={40} />
-            <p>{props.like}</p>
+            <p>{props.likesCount}</p>
           </Button>
           <Button variant="ghost" className="cursor-pointer text-lg">
             <MessageCircleMore size={40} />
-            <p>{props.comment}</p>
+            <p>{props.commentsCount}</p>
           </Button>
           <Button variant="ghost" className="cursor-pointer text-lg">
             <Share2 size={40} />
-            <p>{props.share}</p>
+            <p>{props.sharesCount}</p>
           </Button>
         </div>
       </CardContent>

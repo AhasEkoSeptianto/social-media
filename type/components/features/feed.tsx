@@ -1,10 +1,36 @@
 export interface FeedTypes {
-  users: string;
-  profile_pict: string;
-  time: string;
-  post_text: string;
-  post_image: string;
-  like: number;
-  comment: number;
-  share: number;
+  author: {
+    email: string;
+    name: string;
+    avatarUrl: string;
+  };
+  postContext: string;
+  images: string;
+  likesCount: number;
+  commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
+  sharesCount: number;
+}
+
+export interface PostsResponse {
+  success: boolean;
+  data: {
+    data: {
+      posts: FeedTypes[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      };
+    };
+  };
+}
+
+export interface PaginationResponse {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }

@@ -20,7 +20,7 @@ export async function createPost(data: {
   content: string;
   image_url: string;
 }): Promise<CreatePostFormData> {
-  const res = await fetch(`${API_URL}/api/posts`, {
+  const res = await fetch(`${API_URL}/api/posts/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
