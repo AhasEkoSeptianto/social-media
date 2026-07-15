@@ -1,5 +1,6 @@
 "use client";
 
+import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -44,12 +45,17 @@ export default function ExplorePage() {
   const [selectedTag, setSelectedTag] = useState("All");
   return (
     <SidebarProvider className="">
-      <AppSidebar />
-      <main className="w-full grid grid-cols-12 p-4 gap-8 ">
+      <div className="hidden lg:block">
+        <AppSidebar />
+      </div>
+      <div className="fixed bottom-0 left-0 z-30">
+        <NavigationMenuMobile />
+      </div>
+      <main className="w-full lg:grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
-        <div className="col-span-9 container space-y-8">
-          <div className="flex items-center justify-between">
-            <Field orientation="horizontal" className="bg-brand w-60">
+        <div className="col-span-9 lg:container space-y-8">
+          <div className="lg:flex items-center justify-between space-y-4 lg:space-y-0">
+            <Field orientation="horizontal" className="bg-brand w-full lg:w-60">
               <Input type="search" placeholder="Search people,tag,place" />
               <Button variant="secondary" className="bg-brand5">
                 Search

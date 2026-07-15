@@ -1,4 +1,7 @@
+"use client";
+
 import ConversationMessage from "@/components/shared/ConversationMessage";
+import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,7 +56,12 @@ const dummyDataListChat = [
 export default function MessagePage() {
   return (
     <SidebarProvider className="">
-      <AppSidebar />
+      <div className="hidden lg:block">
+        <AppSidebar />
+      </div>
+      <div className="fixed bottom-0 left-0 z-30">
+        <NavigationMenuMobile />
+      </div>
       <main className="w-full grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
         <div className="col-span-9 container space-y-8">

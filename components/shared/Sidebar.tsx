@@ -29,7 +29,7 @@ import { useEffect } from "react";
 import { logout } from "@/lib/api/auth.api";
 import { useRouter } from "next/navigation";
 
-const Menu1 = [
+export const Menu1 = [
   { title: "Home", url: "/", icon: Home },
   { title: "Explore", url: "/explore", icon: Compass },
   { title: "Message", url: "/message", icon: MessageCircleMore, badge: 24 },
@@ -37,7 +37,7 @@ const Menu1 = [
   { title: "Profile", url: "/profile", icon: UserRound },
 ];
 
-const Menu2 = [
+export const Menu2 = [
   { title: "Saved", url: "#", icon: Bookmark },
   { title: "Settings", url: "#", icon: Settings },
 ];

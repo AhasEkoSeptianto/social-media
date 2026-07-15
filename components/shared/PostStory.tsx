@@ -73,8 +73,8 @@ export default function PostStory() {
           <div className="rounded-full p-[2px] bg-[#0d0d12]">
             <Image
               src={"/images/person3.avif"}
-              width={50}
-              height={50}
+              width={80}
+              height={80}
               alt="prof"
               className="rounded-full"
             />
@@ -112,25 +112,27 @@ export default function PostStory() {
               </Attachment>
             ) : null}
           </div>
-          <GetDialogImage
-            disabled={false}
-            onAttach={(url) => setImageUrl(url)}
-          />
-          <Button
-            size="icon"
-            aria-label="Submit"
-            variant="outline"
-            className="bg-brand hover:bg-brand2 hover:cursor-pointer"
-          >
-            <Camera className="text-white" />
-          </Button>
-          <Button
-            variant="secondary"
-            className="bg-brand5 text-white font-bold hover:bg-highlight3 cursor-pointer"
-            type="submit"
-          >
-            Post
-          </Button>
+          <div className="flex items-center space-x-3">
+            <GetDialogImage
+              disabled={false}
+              onAttach={(url) => setImageUrl(url)}
+            />
+            {/* <Button
+              size="icon"
+              aria-label="Submit"
+              variant="outline"
+              className="bg-brand hover:bg-brand2 hover:cursor-pointer"
+            >
+              <Camera className="text-white" />
+            </Button> */}
+            <Button
+              variant="secondary"
+              className="bg-brand5 text-white font-bold hover:bg-highlight3 cursor-pointer"
+              type="submit"
+            >
+              Post
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

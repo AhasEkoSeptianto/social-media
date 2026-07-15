@@ -1,3 +1,6 @@
+"use client";
+
+import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -25,8 +28,13 @@ const items: ExploreItem[] = [
 export default function ProfilePage() {
   return (
     <SidebarProvider className="">
-      <AppSidebar />
-      <main className="w-full grid grid-cols-12 p-4 gap-8 ">
+      <div className="hidden lg:block">
+        <AppSidebar />
+      </div>
+      <div className="fixed bottom-0 left-0 z-30">
+        <NavigationMenuMobile />
+      </div>
+      <main className="w-full lg:grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
         <div className="col-span-9 container space-y-8">
           <div className="relative h-70">
@@ -63,18 +71,18 @@ export default function ProfilePage() {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-10 text-center">
+            <div className="flex items-center gap-2 lg:gap-10 text-center">
               <div>
-                <h2 className="text-3xl font-bold">285</h2>
-                <p className="text-white/60">Posts</p>
+                <h2 className="lg:text-3xl font-bold">285</h2>
+                <p className="text-sm lg:text-base text-white/60">Posts</p>
               </div>
               <div>
-                <h2 className="text-3xl font-bold">14.2k</h2>
-                <p className="text-white/60">Followes</p>
+                <h2 className="lg:text-3xl font-bold">14.2k</h2>
+                <p className="text-xs lg:text-base text-white/60">Followes</p>
               </div>
               <div>
-                <h2 className="text-3xl font-bold">891</h2>
-                <p className="text-white/60">Following</p>
+                <h2 className="lg:text-3xl font-bold">891</h2>
+                <p className="text-xs lg:text-base text-white/60">Following</p>
               </div>
             </div>
           </div>

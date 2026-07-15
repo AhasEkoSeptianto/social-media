@@ -1,3 +1,6 @@
+"use client";
+
+import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,8 +55,13 @@ const dummyData = [
 export default function ActivityPage() {
   return (
     <SidebarProvider className="">
-      <AppSidebar />
-      <main className="w-full grid grid-cols-12 p-4 gap-8 ">
+      <div className="hidden lg:block">
+        <AppSidebar />
+      </div>
+      <div className="fixed bottom-0 left-0 z-30">
+        <NavigationMenuMobile />
+      </div>
+      <main className="w-full lg:grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
         <div className="col-span-6 container space-y-8">
           <div className="flex items-center justify-between">

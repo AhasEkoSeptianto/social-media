@@ -16,13 +16,19 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/auths/useUser";
 import { usePosts } from "@/hooks/posts/usePosts";
+import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 
 export default function Home() {
   const { posts, isLoading, mutate } = usePosts();
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full grid grid-cols-12 p-4 gap-8 ">
+      <div className="hidden lg:block">
+        <AppSidebar />
+      </div>
+      <div className="fixed bottom-0 left-0 z-30">
+        <NavigationMenuMobile />
+      </div>
+      <main className="w-full lg:grid grid-cols-12 p-4 lg:gap-8 ">
         <div className="col-span-2"></div>
         <div className="col-span-6 container space-y-4">
           <StoryFeed />
@@ -32,7 +38,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className=" col-span-3 py-4 space-y-4">
+        <div className="hidden lg:block col-span-3 py-4 space-y-4">
           <Field orientation="horizontal" className="bg-brand">
             <Input type="search" placeholder="Search in prism" />
             <Button variant="secondary" className="bg-brand5 cursor-pointer">
