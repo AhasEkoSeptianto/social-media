@@ -15,7 +15,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { useUser } from "@/hooks/auths/useUser";
 import { usePosts } from "@/hooks/posts/usePosts";
-import { deletePost } from "@/lib/api/posts.api";
+import { deletePost, likePost } from "@/lib/api/posts.api";
 import { FeedTypes } from "@/type/components/features/feed";
 import {
   Ellipse,
@@ -27,14 +27,18 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
+import dayjs from "@/lib/day";
 
 export default function Feed(props: FeedTypes) {
   const { user, mutate } = useUser();
   const { mutate: mutatePost } = usePosts();
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loading, setLoading] = useState({
+    delete: false,
+    like: false,
+  });
 
   const deletePostFunction = async () => {
-    setLoadingDelete(true);
+    setLoading((prev) => ({ ...prev, delete: true }));
     try {
       let resp = await deletePost(props._id);
       mutatePost();
@@ -43,7 +47,19 @@ export default function Feed(props: FeedTypes) {
       console.log(error);
     }
 
-    setLoadingDelete(false);
+    setLoading((prev) => ({ ...prev, delete: false }));
+  };
+
+  const handleLikePost = async () => {
+    setLoading((prev) => ({ ...prev, like: true }));
+    try {
+      let resp = await likePost(props._id);
+      mutatePost();
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading((prev) => ({ ...prev, like: true }));
   };
 
   return (
@@ -59,7 +75,7 @@ export default function Feed(props: FeedTypes) {
           />
           <div>
             <p className="text-lg">{props.author.name}</p>
-            <p className="opacity-50">{props.createdAt}</p>
+            <p className="opacity-50"> {dayjs(props.createdAt).fromNow()}</p>
           </div>
         </div>
         {user?.id === props.author._id ? (
@@ -75,7 +91,7 @@ export default function Feed(props: FeedTypes) {
                   className="p-2 hover:bg-brand2/20 text-danger cursor-pointer font-bold"
                   onClick={() => deletePostFunction()}
                 >
-                  {loadingDelete ? <Spinner /> : "Delete"}
+                  {loading.delete ? <Spinner /> : "Delete"}
                 </p>
               </div>
             </PopoverContent>
@@ -97,8 +113,15 @@ export default function Feed(props: FeedTypes) {
         ) : null}
 
         <div>
-          <Button variant="ghost" className="cursor-pointer text-lg">
-            <Heart size={40} className="text-red-500 fill-red-500" />
+          <Button
+            variant="ghost"
+            className="cursor-pointer text-lg"
+            onClick={handleLikePost}
+          >
+            <Heart
+              size={40}
+              className={` ${props.isLiked ? "fill-red-500 text-red-500" : ""}`}
+            />
             <p>{props.likesCount}</p>
           </Button>
           <Button variant="ghost" className="cursor-pointer text-lg">

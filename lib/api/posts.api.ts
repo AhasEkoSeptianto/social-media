@@ -39,3 +39,13 @@ export async function deletePost(post_id: string): Promise<CreatePostFormData> {
 
   return res;
 }
+
+export async function likePost(post_id: string): Promise<CreatePostFormData> {
+  const res = await nextFetcher(`/api/posts/like/${post_id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.success) throw new Error("Gagal membuat post");
+
+  return res;
+}

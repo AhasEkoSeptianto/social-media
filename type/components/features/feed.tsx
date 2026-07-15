@@ -9,6 +9,7 @@ export interface FeedTypes {
   postContext: string;
   images: string;
   likesCount: number;
+  isLiked: boolean;
   commentsCount: number;
   createdAt: string;
   updatedAt: string;
