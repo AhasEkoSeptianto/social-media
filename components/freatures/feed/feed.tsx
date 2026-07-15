@@ -6,25 +6,81 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
+import { useUser } from "@/hooks/auths/useUser";
+import { usePosts } from "@/hooks/posts/usePosts";
+import { deletePost } from "@/lib/api/posts.api";
 import { FeedTypes } from "@/type/components/features/feed";
-import { Heart, MessageCircleMore, Share2 } from "lucide-react";
+import {
+  Ellipse,
+  Ellipsis,
+  Heart,
+  MessageCircleMore,
+  Share2,
+} from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Feed(props: FeedTypes) {
+  const { user, mutate } = useUser();
+  const { mutate: mutatePost } = usePosts();
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const deletePostFunction = async () => {
+    setLoadingDelete(true);
+    try {
+      let resp = await deletePost(props._id);
+      mutatePost();
+      toast.success("Success", { position: "top-center" });
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoadingDelete(false);
+  };
+
   return (
     <Card className="bg-brand text-white">
-      <CardHeader className="flex items-center space-x-4">
-        <Image
-          src={props.author.avatarUrl}
-          width={40}
-          height={40}
-          alt="prof"
-          className="rounded-full"
-        />
-        <div>
-          <p className="text-lg">{props.author.name}</p>
-          <p className="opacity-50">{props.createdAt}</p>
+      <CardHeader className="flex items-start justify-between">
+        <div className="flex items-center space-x-4">
+          <Image
+            src={props.author.avatarUrl}
+            width={40}
+            height={40}
+            alt="prof"
+            className="rounded-full"
+          />
+          <div>
+            <p className="text-lg">{props.author.name}</p>
+            <p className="opacity-50">{props.createdAt}</p>
+          </div>
         </div>
+        {user?.id === props.author._id ? (
+          <Popover>
+            <PopoverTrigger
+              render={<Button className="cursor-pointer" variant="ghost" />}
+            >
+              <Ellipsis />
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-42 px-0">
+              <div className=" ">
+                <p
+                  className="p-2 hover:bg-brand2/20 text-danger cursor-pointer font-bold"
+                  onClick={() => deletePostFunction()}
+                >
+                  {loadingDelete ? <Spinner /> : "Delete"}
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : null}
       </CardHeader>
       <CardContent className="bg-brand space-y-4">
         <p>{props.postContext}</p>

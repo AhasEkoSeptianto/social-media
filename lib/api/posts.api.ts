@@ -29,3 +29,13 @@ export async function createPost(data: {
 
   return res;
 }
+
+export async function deletePost(post_id: string): Promise<CreatePostFormData> {
+  const res = await nextFetcher(`/api/posts/${post_id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.success) throw new Error("Gagal membuat post");
+
+  return res;
+}

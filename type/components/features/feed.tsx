@@ -1,6 +1,7 @@
 export interface FeedTypes {
   _id: string;
   author: {
+    _id: string;
     email: string;
     name: string;
     avatarUrl: string;
