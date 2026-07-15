@@ -54,7 +54,7 @@ export default function PostStory() {
         content: data.context,
         image_url: imageurl,
       });
-
+      console.log(resp);
       toast.success("Success create post", { position: "top-center" });
       setImageUrl("");
       reset();

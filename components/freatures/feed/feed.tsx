@@ -5,6 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { FeedTypes } from "@/type/components/features/feed";
 import { Heart, MessageCircleMore, Share2 } from "lucide-react";
 import Image from "next/image";
@@ -41,7 +42,7 @@ export default function Feed(props: FeedTypes) {
 
         <div>
           <Button variant="ghost" className="cursor-pointer text-lg">
-            <Heart size={40} />
+            <Heart size={40} className="text-red-500 fill-red-500" />
             <p>{props.likesCount}</p>
           </Button>
           <Button variant="ghost" className="cursor-pointer text-lg">
@@ -54,6 +55,14 @@ export default function Feed(props: FeedTypes) {
           </Button>
         </div>
       </CardContent>
+      {/* <CardFooter className="bg-brand">
+        <div className="w-full">
+          <div>
+
+          </div>
+          <Input placeholder="comment.." />
+        </div>
+      </CardFooter> */}
     </Card>
   );
 }

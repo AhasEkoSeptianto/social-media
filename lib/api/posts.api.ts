@@ -1,5 +1,5 @@
 // lib/api/posts.api.ts
-import { API_URL } from "../fetcher";
+import { API_URL, nextFetcher } from "../fetcher";
 import { CreatePostFormData } from "../schemas/post.schema";
 
 export async function getPosts(): Promise<CreatePostFormData> {
@@ -20,12 +20,12 @@ export async function createPost(data: {
   content: string;
   image_url: string;
 }): Promise<CreatePostFormData> {
-  const res = await fetch(`${API_URL}/api/posts/create`, {
+  const res = await nextFetcher(`${API_URL}/api/posts/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(data),
+    body: data,
   });
-  if (!res.ok) throw new Error("Gagal membuat post");
+  console.log(res, "<====");
+  // if (!res.success) throw new Error("Gagal membuat post");
   return res.json();
 }

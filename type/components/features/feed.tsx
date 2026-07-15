@@ -1,4 +1,5 @@
 export interface FeedTypes {
+  _id: string;
   author: {
     email: string;
     name: string;
