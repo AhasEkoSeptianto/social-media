@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/auths/useUser";
 import { usePosts } from "@/hooks/posts/usePosts";
 import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
+import LoadingFeed from "@/components/freatures/feed/LoadingFeed";
 
 export default function Home() {
   const { posts, isLoading, mutate } = usePosts();
@@ -25,7 +26,7 @@ export default function Home() {
       <div className="hidden lg:block">
         <AppSidebar />
       </div>
-      <div className="fixed bottom-0 left-0 z-30">
+      <div className="fixed bottom-0 left-0 z-30 lg:hidden">
         <NavigationMenuMobile />
       </div>
       <main className="w-full lg:grid grid-cols-12 p-4 lg:gap-8 ">
@@ -33,9 +34,13 @@ export default function Home() {
         <div className="col-span-6 container space-y-4">
           <StoryFeed />
           <PostStory />
-          {posts?.data?.posts.map((post: any, idx: number) => (
-            <Feed key={idx} {...post} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, idx) => (
+                <LoadingFeed key={idx} />
+              ))
+            : posts?.data?.posts.map((post: FeedTypes) => (
+                <Feed key={post._id} {...post} />
+              ))}
         </div>
 
         <div className="hidden lg:block col-span-3 py-4 space-y-4">

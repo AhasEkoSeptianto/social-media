@@ -59,7 +59,7 @@ export default function MessagePage() {
       <div className="hidden lg:block">
         <AppSidebar />
       </div>
-      <div className="fixed bottom-0 left-0 z-30">
+      <div className="fixed bottom-0 left-0 z-30 lg:hidden">
         <NavigationMenuMobile />
       </div>
       <main className="w-full grid grid-cols-12 p-4 gap-8 ">
