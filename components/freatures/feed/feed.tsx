@@ -22,12 +22,15 @@ import {
   Ellipsis,
   Heart,
   MessageCircleMore,
+  SendHorizonal,
   Share2,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import dayjs from "@/lib/day";
+import CommentPostForm from "@/components/forms/CommentPostForm";
+import Comment from "../comment/Comment";
 
 export default function Feed(props: FeedTypes) {
   const { user, mutate } = useUser();
@@ -36,6 +39,7 @@ export default function Feed(props: FeedTypes) {
     delete: false,
     like: false,
   });
+  const [openComment, setOpenComment] = useState(false);
 
   const deletePostFunction = async () => {
     setLoading((prev) => ({ ...prev, delete: true }));
@@ -124,7 +128,11 @@ export default function Feed(props: FeedTypes) {
             />
             <p>{props.likesCount}</p>
           </Button>
-          <Button variant="ghost" className="cursor-pointer text-lg">
+          <Button
+            variant="ghost"
+            className="cursor-pointer text-lg"
+            onClick={() => setOpenComment(true)}
+          >
             <MessageCircleMore size={40} />
             <p>{props.commentsCount}</p>
           </Button>
@@ -134,14 +142,14 @@ export default function Feed(props: FeedTypes) {
           </Button>
         </div>
       </CardContent>
-      {/* <CardFooter className="bg-brand">
-        <div className="w-full">
-          <div>
-
+      {openComment ? (
+        <CardFooter className="bg-brand">
+          <div className="w-full space-y-2">
+            <Comment post_id={props._id} />
+            <CommentPostForm post_id={props._id} />
           </div>
-          <Input placeholder="comment.." />
-        </div>
-      </CardFooter> */}
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }
