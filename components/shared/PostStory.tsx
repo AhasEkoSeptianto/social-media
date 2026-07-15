@@ -49,7 +49,6 @@ export default function PostStory() {
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
-      console.log(data);
       const resp = await createPost({
         content: data.context,
         image_url: imageurl,
@@ -60,6 +59,7 @@ export default function PostStory() {
       reset();
       mutate();
     } catch (err) {
+      console.log(err);
       // setServerError(err instanceof Error ? err.message : "Login gagal");
     }
   };

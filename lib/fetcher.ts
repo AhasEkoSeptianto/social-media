@@ -38,9 +38,9 @@ export const nextFetcher = async (url: string, options: ApiOptions = {}) => {
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
 
-  if (!res.ok) {
+  if (!res) {
     const error = new Error("Terjadi kesalahan saat fetch data");
-    (error as any).status = res.status;
+    (error as any).status = res;
     throw error;
   }
 

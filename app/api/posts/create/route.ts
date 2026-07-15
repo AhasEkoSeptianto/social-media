@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const EXPRESS_API_URL = process.env.NEXT_PUBLIC_API_URL; // https://social-media-be-4888.vercel.app
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const cookie = req.headers.get("cookie");
   const body = await req.json();
   const backendRes = await fetch(`${EXPRESS_API_URL}/api/posts/create`, {

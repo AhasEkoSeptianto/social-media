@@ -20,12 +20,12 @@ export async function createPost(data: {
   content: string;
   image_url: string;
 }): Promise<CreatePostFormData> {
-  const res = await nextFetcher(`${API_URL}/api/posts/create`, {
+  const res = await nextFetcher(`/api/posts/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: data,
   });
-  console.log(res, "<====");
-  // if (!res.success) throw new Error("Gagal membuat post");
-  return res.json();
+  if (!res.success) throw new Error("Gagal membuat post");
+
+  return res;
 }
