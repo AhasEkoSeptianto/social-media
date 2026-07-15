@@ -19,6 +19,7 @@ export default function CommentPostForm(props: props) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<CreateCommentPostFormData>({
     resolver: zodResolver(createCommentPostSchema),
   });
@@ -28,7 +29,10 @@ export default function CommentPostForm(props: props) {
     setLoading(true);
     try {
       let resp = await createComment(props.post_id, data.content);
-    } catch (error) {}
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
 
     setLoading(false);
   };
