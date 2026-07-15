@@ -101,7 +101,7 @@ export default function MessagePage() {
                       />
                       <div>
                         <p className="text-lg">{chat.name}</p>
-                        <p className="text-white/70 truncate max-w-60">
+                        <p className="text-white/70 truncate w-32">
                           {chat.last_msg}
                         </p>
                       </div>

@@ -37,6 +37,14 @@ export const Menu1 = [
   { title: "Profile", url: "/profile", icon: UserRound },
 ];
 
+export const MenuMobile = [
+  { title: "Home", url: "/", icon: Home },
+  { title: "Explore", url: "/explore", icon: Compass },
+  { title: "Message", url: "/message", icon: MessageCircleMore, badge: 24 },
+  { title: "Activity", url: "/activity", icon: Bell },
+  { title: "Profile", url: "/profile", icon: UserRound },
+];
+
 export const Menu2 = [
   { title: "Saved", url: "#", icon: Bookmark },
   { title: "Settings", url: "#", icon: Settings },

@@ -14,7 +14,7 @@ export default function Comment(props: Props) {
     getComment,
     {
       shouldRetryOnError: false, // jangan retry kalau 401 (belum login)
-      refreshInterval: 5000,
+      refreshInterval: 20000,
     },
   );
 

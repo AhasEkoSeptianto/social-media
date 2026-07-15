@@ -3,10 +3,34 @@
 import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AppWindowIcon, Bookmark, CodeIcon, Grid2X2, Play } from "lucide-react";
+import { useUser } from "@/hooks/auths/useUser";
+import { logout } from "@/lib/api/auth.api";
+import {
+  AppWindowIcon,
+  ArrowLeft,
+  Bookmark,
+  CodeIcon,
+  Grid2X2,
+  LogOut,
+  Menu,
+  Play,
+  Settings,
+} from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 interface ExploreItem {
   id: string;
   src: string;
@@ -26,6 +50,34 @@ const items: ExploreItem[] = [
   { id: "8", src: "/images/post8.avif", alt: "Man portrait" },
 ];
 export default function ProfilePage() {
+  const router = useRouter();
+  const { user, mutate } = useUser();
+  const [onSetting, setOnSetting] = useState(false);
+  const onLogout = async () => {
+    await logout();
+    await mutate();
+    router.push("/login");
+  };
+
+  if (onSetting) {
+    return (
+      <div className="absolute z-50 h-screen w-screen bg-brand p-4 space-y-2">
+        <div className="flex items-center space-x-4">
+          <ArrowLeft onClick={() => setOnSetting(false)} />
+          <p className="text-2xl">Settings</p>
+        </div>
+        <Separator className="h-3" />
+        <div
+          className="flex items-center space-x-2 text-danger "
+          onClick={onLogout}
+        >
+          <LogOut />
+          <p>Keluar</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <SidebarProvider className="">
       <div className="hidden lg:block">
@@ -34,6 +86,13 @@ export default function ProfilePage() {
       <div className="fixed bottom-0 left-0 z-30 lg:hidden">
         <NavigationMenuMobile />
       </div>
+
+      <div className="absolute top-8 right-8 text-black z-40">
+        <Button size="lg" onClick={() => setOnSetting(true)}>
+          <Settings className="rounded-lg" size={50} />
+        </Button>
+      </div>
+
       <main className="w-full lg:grid grid-cols-12 p-4 gap-8 ">
         <div className="col-span-2"></div>
         <div className="col-span-9 container space-y-8">
