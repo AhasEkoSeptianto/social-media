@@ -127,8 +127,8 @@ export default function ProfilePage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex justify-between items-center space-x-2">
-                <h1 className="text-4xl lg:min-w-36">
+              <div className="lg:flex justify-between items-center space-x-2">
+                <h1 className="text-2xl lg:text-4xl lg:min-w-36">
                   {user?.username ?? user?.name}
                 </h1>
                 <EditProfileForm />
@@ -149,7 +149,9 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-2 lg:gap-10 text-center">
               <div>
-                <h2 className="lg:text-3xl font-bold">{user?.postCount}</h2>
+                <h2 className="lg:text-3xl font-bold">
+                  {user?.postCount ?? 0}
+                </h2>
                 <p className="text-sm lg:text-base text-white/60">Posts</p>
               </div>
               <div>

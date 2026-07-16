@@ -13,7 +13,7 @@ export async function updateProfile(
       username,
       image_url,
       bio,
-      tag: JSON.stringify(tag),
+      tag: tag,
     },
   });
   if (!res.success) throw new Error("Gagal mengambil posts");

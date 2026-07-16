@@ -29,6 +29,7 @@ import { useState } from "react";
 import { updateProfile } from "@/lib/api/profile.api";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/auths/useUser";
+import { Spinner } from "../ui/spinner";
 
 export default function EditProfileForm() {
   const { user, mutate } = useUser();
@@ -41,10 +42,10 @@ export default function EditProfileForm() {
     resolver: zodResolver(updateProfileSchema),
   });
   const [loading, setLoading] = useState(false);
+  const [openSheet, setOpenSheet] = useState(false);
   const [tagList, setTagList] = useState<any>([]);
   const [tempAddTag, setTempAddTag] = useState("");
   const onSubmit = async (data: updateProfileFormData) => {
-    console.log(data);
     setLoading(true);
     try {
       let resp = await updateProfile(
@@ -56,24 +57,29 @@ export default function EditProfileForm() {
 
       toast.success("Success", { position: "top-center" });
       mutate();
+      setOpenSheet(false);
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
-  const DetectOpen = () => [
+  const DetectOpen = (open: boolean) => {
     reset({
       name: user?.username ?? user?.name,
       description: user?.bio,
       image_url: user?.avatarUrl,
-    }),
-    setTagList(user?.tag),
-  ];
+    });
+
+    if (user?.tag) {
+      setTagList(user?.tag);
+    }
+    setOpenSheet(open);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Sheet onOpenChange={DetectOpen}>
+      <Sheet onOpenChange={DetectOpen} open={openSheet}>
         <SheetTrigger
           render={<Button variant="outline">Edit Profile</Button>}
         />
@@ -169,8 +175,12 @@ export default function EditProfileForm() {
             </div>
           </div>
           <SheetFooter>
-            <Button onClick={handleSubmit(onSubmit)} type="submit">
-              Save changes
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? <Spinner /> : "Save changes"}
             </Button>
             <SheetClose render={<Button variant="outline">Close</Button>} />
           </SheetFooter>
