@@ -1,5 +1,6 @@
 "use client";
 
+import EditProfileForm from "@/components/forms/EditProfileForm";
 import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +19,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/auths/useUser";
 import { logout } from "@/lib/api/auth.api";
 import {
-  AppWindowIcon,
   ArrowLeft,
   Bookmark,
-  CodeIcon,
   Grid2X2,
   LogOut,
-  Menu,
   Play,
   Settings,
 } from "lucide-react";
@@ -87,7 +85,7 @@ export default function ProfilePage() {
         <NavigationMenuMobile />
       </div>
 
-      <div className="absolute top-8 right-8 text-black z-40">
+      <div className="absolute top-8 right-8 text-black z-40 lg:hidden">
         <Button size="lg" onClick={() => setOnSetting(true)}>
           <Settings className="rounded-lg" size={50} />
         </Button>
@@ -112,7 +110,10 @@ export default function ProfilePage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl">Ekozzi</h1>
+              <div className="flex justify-between items-center">
+                <h1 className="text-4xl">Ekozzi</h1>
+                <EditProfileForm />
+              </div>
               <p>Product designer & travel lover 🌍 · Amsterdam, NL</p>
               <div className="space-x-2">
                 {[

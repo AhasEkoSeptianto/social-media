@@ -1,14 +1,12 @@
-// app/api/auth/google/route.ts
 import { NextRequest, NextResponse } from "next/server";
+const EXPRESS_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const EXPRESS_API_URL = process.env.NEXT_PUBLIC_API_URL; // https://social-media-be-4888.vercel.app
-
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   const body = await req.json();
-
-  const backendRes = await fetch(`${EXPRESS_API_URL}/api/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  const cookie = req.headers.get("cookie");
+  const backendRes = await fetch(`${EXPRESS_API_URL}/api/profile/update`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", cookie: cookie ?? "" },
     body: JSON.stringify(body),
   });
 

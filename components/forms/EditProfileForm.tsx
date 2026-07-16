@@ -1,0 +1,178 @@
+import { useForm } from "react-hook-form";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  updateProfileFormData,
+  updateProfileSchema,
+} from "@/lib/schemas/profile.schema";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "../ui/input-group";
+import { ButtonGroup } from "../ui/button-group";
+import { XIcon } from "lucide-react";
+import { useState } from "react";
+import { updateProfile } from "@/lib/api/profile.api";
+import { toast } from "sonner";
+import { useUser } from "@/hooks/auths/useUser";
+
+export default function EditProfileForm() {
+  const { user, mutate } = useUser();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<updateProfileFormData>({
+    resolver: zodResolver(updateProfileSchema),
+  });
+  const [loading, setLoading] = useState(false);
+  const [tagList, setTagList] = useState<string[]>([]);
+  const [tempAddTag, setTempAddTag] = useState("");
+  const onSubmit = async (data: updateProfileFormData) => {
+    console.log(data);
+    setLoading(true);
+    try {
+      let resp = await updateProfile(
+        data.name,
+        data.image_url,
+        data.description,
+        tagList,
+      );
+
+      toast.success("Success", { position: "top-center" });
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const DetectOpen = () => [
+    reset({
+      name: user?.username ?? user?.name,
+      description: user?.bio,
+      image_url: user?.avatarUrl,
+    }),
+    setTagList(user?.tag),
+  ];
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Sheet onOpenChange={DetectOpen}>
+        <SheetTrigger
+          render={<Button variant="outline">Edit Profile</Button>}
+        />
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Edit profile</SheetTitle>
+          </SheetHeader>
+          <div>
+            <div className="grid flex-1 auto-rows-min gap-6 px-4">
+              <div className="grid gap-3">
+                <Label htmlFor="sheet-demo-name">Url profile picture</Label>
+                <Input
+                  id="sheet-demo-name"
+                  aria-invalid={errors.image_url ? "true" : "false"}
+                  {...register("image_url")}
+                />
+                {errors.image_url && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.image_url.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="sheet-demo-name">Username</Label>
+                <Input
+                  id="sheet-demo-name"
+                  aria-invalid={errors.name ? "true" : "false"}
+                  {...register("name")}
+                />
+                {errors.name && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="sheet-demo-username">Description</Label>
+                <Input
+                  id="sheet-demo-username"
+                  aria-invalid={errors.description ? "true" : "false"}
+                  {...register("description")}
+                />{" "}
+                {errors.description && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label className="mb-2">Tag</Label>
+                <div className="flex flex-wrap gap-2">
+                  {tagList?.length === 0 ? (
+                    <p className="text-sm">Empty tag</p>
+                  ) : (
+                    tagList?.map((tag, idx) => (
+                      <ButtonGroup key={idx}>
+                        <Button variant="outline">{tag}</Button>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            setTagList((prev) => prev.filter((i) => i !== tag))
+                          }
+                        >
+                          <XIcon />
+                        </Button>
+                      </ButtonGroup>
+                    ))
+                  )}
+                </div>
+              </div>
+              <div className="grid gap-3">
+                <InputGroup>
+                  <InputGroupInput
+                    placeholder="Type to and add tag"
+                    value={tempAddTag}
+                    onChange={(e) => setTempAddTag(e.target.value)}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      variant="secondary"
+                      onClick={() => {
+                        setTagList((prev) => [...prev, tempAddTag]);
+                        setTempAddTag("");
+                      }}
+                    >
+                      Add Tag
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
+            </div>
+          </div>
+          <SheetFooter>
+            <Button onClick={handleSubmit(onSubmit)} type="submit">
+              Save changes
+            </Button>
+            <SheetClose render={<Button variant="outline">Close</Button>} />
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </form>
+  );
+}
