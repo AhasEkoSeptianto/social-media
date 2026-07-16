@@ -188,12 +188,10 @@ export default function ProfilePage() {
                   <p className="text-center text-2xl">No Share Photos</p>
                 </div>
               ) : (
-                myPostList?.map((item: any, idx: number) => (
-                  <div
-                    className="grid grid-cols-3 gap-2 auto-rows-[200px]"
-                    key={item._id}
-                  >
+                <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
+                  {myPostList?.map((item: any, idx: number) => (
                     <div
+                      key={item._id}
                       className={`relative overflow-hidden rounded-lg bg-neutral-900`}
                     >
                       <Image
@@ -209,9 +207,9 @@ export default function ProfilePage() {
                         <Play className="h-3 w-3 fill-white text-white" />
                       </div>
                     )} */}
-                    </div>{" "}
-                  </div>
-                ))
+                    </div>
+                  ))}
+                </div>
               )}
             </TabsContent>
             <TabsContent value="saved">

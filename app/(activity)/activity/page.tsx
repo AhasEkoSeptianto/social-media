@@ -2,12 +2,21 @@
 
 import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { following } from "@/lib/api/follow.api";
+import { getNotification } from "@/lib/api/notification.api";
+import dayjs from "@/lib/day";
+import { Bell } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import useSWR from "swr";
 
 const dummyData = [
   {
@@ -53,6 +62,28 @@ const dummyData = [
 ];
 
 export default function ActivityPage() {
+  const {
+    data,
+    mutate,
+    isLoading: loadingFetch,
+  } = useSWR("/api/notification/get", getNotification, {
+    shouldRetryOnError: false,
+  });
+  const [loading, setLoading] = useState({ follow: "" });
+  console.log(data);
+
+  const HandleFollow = async (following_id: string) => {
+    setLoading((prev) => ({ ...prev, follow: following_id }));
+    try {
+      await following(following_id);
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading((prev) => ({ ...prev, follow: "" }));
+  };
+
   return (
     <SidebarProvider className="">
       <div className="hidden lg:block">
@@ -67,70 +98,96 @@ export default function ActivityPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <h1 className="text-3xl">Activity</h1>
-              <Badge className="bg-highlight2  text-hightlight dark:bg-blue-950 dark:text-blue-300">
+              {/* <Badge className="bg-highlight2  text-hightlight dark:bg-blue-950 dark:text-blue-300">
                 3 New
-              </Badge>
+              </Badge> */}
             </div>
-            <Button variant="ghost" className="text-highlight2 cursor-pointer">
+            {/* <Button variant="ghost" className="text-highlight2 cursor-pointer">
               Mark all as read
-            </Button>
+            </Button> */}
           </div>
 
-          <Card className="bg-brand text-white">
-            <CardContent className="space-y-2">
-              {dummyData.map((activity, idx) => (
-                <div key={idx}>
-                  <div className="p-4 flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <Image
-                        src={activity.picture}
-                        width={60}
-                        height={60}
-                        alt="prof"
-                        className="rounded-full"
-                      />
+          {loadingFetch ? (
+            Array.from({ length: 4 }).map((a, i) => (
+              <Skeleton className="h-20 w-full" key={i} />
+            ))
+          ) : data?.data?.length === 0 ? (
+            <div className="place-content-center h-96 w-full text-center">
+              <Bell className="mx-auto" size={70} />
+              <p>No recent activity yet</p>
+            </div>
+          ) : (
+            <Card className="bg-brand text-white">
+              <CardContent className="space-y-2">
+                {data?.data?.map((activity: any, idx: number) => (
+                  <div key={idx}>
+                    <div className="p-4 flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <Avatar size="lg">
+                          <AvatarImage
+                            src={activity?.actor?.avatar_url}
+                            alt="@shadcn"
+                          />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-2xl">
+                            {activity?.actor?.username ?? activity?.actor?.name}{" "}
+                            <span className="opacity-50 text-sm">
+                              {activity.type === "like"
+                                ? "like your photo"
+                                : activity.type === "follow"
+                                  ? "started following you"
+                                  : activity.type === "comment"
+                                    ? `commented: ${activity?.comment?.content}`
+                                    : activity.type === "repost"
+                                      ? "reposted your photo"
+                                      : null}
+                            </span>
+                          </p>
+                          <p className="opacity-50 text-sm">
+                            {dayjs(activity.createdAt).fromNow()}
+                          </p>
+                        </div>
+                      </div>
+
                       <div>
-                        <p className="text-2xl">
-                          {activity.name}{" "}
-                          <span className="opacity-50 text-sm">
-                            {activity.activity.type === "love"
-                              ? "like your photo"
-                              : activity.activity.type === "follow"
-                                ? "started following you"
-                                : activity.activity.type === "comment"
-                                  ? `commented: ${activity.activity.post_comment}`
-                                  : activity.activity.type === "repost"
-                                    ? "reposted your photo"
-                                    : null}
-                          </span>
-                        </p>
-                        <p className="opacity-50 text-sm">{activity.time}</p>
+                        {activity.type === "follow" ? (
+                          <Button
+                            className="bg-highlight2 rounded text-white"
+                            onClick={() => HandleFollow(activity.actor._id)}
+                            variant={
+                              activity?.isFollowBack ? "outline" : "default"
+                            }
+                            disabled={loading.follow === activity.actor._id}
+                          >
+                            {loading.follow === activity?.actor._id ? (
+                              <Spinner />
+                            ) : activity?.isFollowBack ? (
+                              "Unfollow"
+                            ) : (
+                              "Follow"
+                            )}
+                          </Button>
+                        ) : ["like", "repost", "comment"].includes(
+                            activity.type,
+                          ) && activity?.post?.images ? (
+                          <Image
+                            src={activity?.post.images}
+                            width={60}
+                            height={60}
+                            alt={`${activity.name}'s post`}
+                            className="rounded-md object-cover"
+                          />
+                        ) : null}
                       </div>
                     </div>
-
-                    <div>
-                      {activity.activity.type === "follow" ? (
-                        <Button className="bg-highlight2 rounded">
-                          follow
-                        </Button>
-                      ) : ["love", "repost", "comment"].includes(
-                          activity.activity.type,
-                        ) ? (
-                        <Image
-                          src={activity.activity.post_image}
-                          width={60}
-                          height={60}
-                          alt={`${activity.name}'s post`}
-                          className="rounded-md object-cover"
-                        />
-                      ) : null}
-                    </div>
+                    <Separator className="mb-2 bg-white/10" />
                   </div>
-                  <Separator className="mb-2 bg-white/10" />
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                ))}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </main>
     </SidebarProvider>

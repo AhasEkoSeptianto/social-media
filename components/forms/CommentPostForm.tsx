@@ -13,6 +13,7 @@ import { Spinner } from "../ui/spinner";
 
 interface props {
   post_id: string;
+  onSuccessComment: () => void;
 }
 export default function CommentPostForm(props: props) {
   const {
@@ -30,6 +31,7 @@ export default function CommentPostForm(props: props) {
     try {
       let resp = await createComment(props.post_id, data.content);
       reset();
+      props.onSuccessComment();
     } catch (error) {
       console.log(error);
     }

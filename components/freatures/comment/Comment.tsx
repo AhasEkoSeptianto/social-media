@@ -1,3 +1,4 @@
+import CommentPostForm from "@/components/forms/CommentPostForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getComment } from "@/lib/api/posts.api";
@@ -42,6 +43,10 @@ export default function Comment(props: Props) {
           </div>
         ))
       )}
+      <CommentPostForm
+        post_id={props.post_id}
+        onSuccessComment={() => mutate()}
+      />
     </div>
   );
 }

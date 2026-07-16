@@ -57,7 +57,7 @@ export default function Feed(props: FeedTypes) {
   const handleLikePost = async () => {
     setLoading((prev) => ({ ...prev, like: true }));
     try {
-      let resp = await likePost(props._id);
+      await likePost(props._id);
       mutatePost();
     } catch (error) {
       console.log(error);
@@ -146,7 +146,6 @@ export default function Feed(props: FeedTypes) {
         <CardFooter className="bg-brand">
           <div className="w-full space-y-2">
             <Comment post_id={props._id} />
-            <CommentPostForm post_id={props._id} />
           </div>
         </CardFooter>
       ) : null}
