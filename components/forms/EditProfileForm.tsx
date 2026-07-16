@@ -41,7 +41,7 @@ export default function EditProfileForm() {
     resolver: zodResolver(updateProfileSchema),
   });
   const [loading, setLoading] = useState(false);
-  const [tagList, setTagList] = useState<string[]>([]);
+  const [tagList, setTagList] = useState<any>([]);
   const [tempAddTag, setTempAddTag] = useState("");
   const onSubmit = async (data: updateProfileFormData) => {
     console.log(data);
@@ -70,6 +70,7 @@ export default function EditProfileForm() {
     }),
     setTagList(user?.tag),
   ];
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Sheet onOpenChange={DetectOpen}>
@@ -127,13 +128,15 @@ export default function EditProfileForm() {
                   {tagList?.length === 0 ? (
                     <p className="text-sm">Empty tag</p>
                   ) : (
-                    tagList?.map((tag, idx) => (
+                    tagList?.map((tag: string, idx: number) => (
                       <ButtonGroup key={idx}>
                         <Button variant="outline">{tag}</Button>
                         <Button
                           variant="outline"
                           onClick={() =>
-                            setTagList((prev) => prev.filter((i) => i !== tag))
+                            setTagList((prev: any) =>
+                              prev.filter((i: string) => i !== tag),
+                            )
                           }
                         >
                           <XIcon />
@@ -154,7 +157,7 @@ export default function EditProfileForm() {
                     <InputGroupButton
                       variant="secondary"
                       onClick={() => {
-                        setTagList((prev) => [...prev, tempAddTag]);
+                        setTagList((prev: any) => [...prev, tempAddTag]);
                         setTempAddTag("");
                       }}
                     >

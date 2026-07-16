@@ -5,9 +5,12 @@ interface User {
   email: string;
   name: string;
   bio: string;
-  tag: string[];
+  tag: any;
   avatarUrl?: string;
   username?: string;
+  postCount?: number;
+  followingCount: number;
+  followerCount: number;
 }
 
 export function useUser() {
