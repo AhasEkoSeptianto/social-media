@@ -22,6 +22,7 @@ import { nextFetcher } from "@/lib/fetcher";
 import {
   ArrowLeft,
   Bookmark,
+  Camera,
   Grid2X2,
   LogOut,
   Play,
@@ -181,28 +182,37 @@ export default function ProfilePage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="preview">
-              <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
-                {myPostList?.map((item: any, idx: number) => (
+              {myPostList?.length === 0 ? (
+                <div className="place-content-center h-96 w-full">
+                  <Camera className="mx-auto" size={100} />
+                  <p className="text-center text-2xl">No Share Photos</p>
+                </div>
+              ) : (
+                myPostList?.map((item: any, idx: number) => (
                   <div
+                    className="grid grid-cols-3 gap-2 auto-rows-[200px]"
                     key={item._id}
-                    className={`relative overflow-hidden rounded-lg bg-neutral-900`}
                   >
-                    <Image
-                      src={item.images}
-                      fill
-                      className="object-cover"
-                      alt={`images ${idx}`}
-                      sizes="(max-width: 768px) 33vw, 300px"
-                      loading="eager"
-                    />
-                    {/* {item.isVideo && (
+                    <div
+                      className={`relative overflow-hidden rounded-lg bg-neutral-900`}
+                    >
+                      <Image
+                        src={item.images}
+                        fill
+                        className="object-cover"
+                        alt={`images ${idx}`}
+                        sizes="(max-width: 768px) 33vw, 300px"
+                        loading="eager"
+                      />
+                      {/* {item.isVideo && (
                       <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
                         <Play className="h-3 w-3 fill-white text-white" />
                       </div>
                     )} */}
+                    </div>{" "}
                   </div>
-                ))}
-              </div>
+                ))
+              )}
             </TabsContent>
             <TabsContent value="saved">
               <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
