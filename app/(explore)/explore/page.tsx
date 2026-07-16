@@ -8,10 +8,11 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { useUser } from "@/hooks/auths/useUser";
+import { following } from "@/lib/api/follow.api";
 import { searchUsers } from "@/lib/api/users.api";
 import { nextFetcher } from "@/lib/fetcher";
-import { Play } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
@@ -31,14 +32,28 @@ const tagMenu = [
 export default function ExplorePage() {
   const [selectedTag, setSelectedTag] = useState("All");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState({ follow: "" });
   const { user: myUser } = useUser();
-  const { data: users, isLoading } = useSWR(
-    `/api/users?search=${search}`,
-    searchUsers,
-    {
-      shouldRetryOnError: false,
-    },
-  );
+  const {
+    data: users,
+    isLoading,
+    mutate,
+  } = useSWR(`/api/users?search=${search}`, searchUsers, {
+    shouldRetryOnError: false,
+  });
+
+  const HandleFollow = async (following_id: string) => {
+    setLoading((prev) => ({ follow: following_id }));
+
+    try {
+      let resp = await following(following_id);
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading((prev) => ({ follow: "" }));
+  };
 
   return (
     <SidebarProvider className="">
@@ -100,7 +115,19 @@ export default function ExplorePage() {
                           <p>{user?.username}</p>
                         </div>
                       </div>
-                      <Button className="bg-brand5 text-white">Follow</Button>
+                      <Button
+                        className="bg-brand5 text-white"
+                        onClick={() => HandleFollow(user?._id)}
+                        variant={user?.isFollow ? "outline" : "default"}
+                      >
+                        {loading.follow === user?._id ? (
+                          <Spinner />
+                        ) : user?.isFollow ? (
+                          "Unfollow"
+                        ) : (
+                          "Follow"
+                        )}
+                      </Button>
                     </div>
                   ))}
             </div>
