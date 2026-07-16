@@ -70,9 +70,9 @@ export default function MessagePage() {
               <CardHeader className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl">Message</h1>
-                  <Button variant="outline" className="cursor-pointer">
+                  {/* <Button variant="outline" className="cursor-pointer">
                     <Plus />
-                  </Button>
+                  </Button> */}
                 </div>
                 <Field>
                   <ButtonGroup>
