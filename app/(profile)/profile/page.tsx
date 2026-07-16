@@ -18,6 +18,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/auths/useUser";
 import { logout } from "@/lib/api/auth.api";
+import { nextFetcher } from "@/lib/fetcher";
 import {
   ArrowLeft,
   Bookmark,
@@ -28,7 +29,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 interface ExploreItem {
   id: string;
   src: string;
@@ -56,7 +58,22 @@ export default function ProfilePage() {
     await mutate();
     router.push("/login");
   };
+  const [myPostList, setMyPostList] = useState([]);
 
+  const getProfile = async () => {
+    const myPost = await nextFetcher(`/api/posts/get?myPost=true&images=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((resp) => {
+      setMyPostList(resp?.data?.posts);
+    });
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
   if (onSetting) {
     return (
       <div className="absolute z-50 h-screen w-screen bg-brand p-4 space-y-2">
@@ -163,26 +180,24 @@ export default function ProfilePage() {
             </TabsList>
             <TabsContent value="preview">
               <div className="grid grid-cols-3 gap-2 auto-rows-[200px]">
-                {items.map((item) => (
+                {myPostList?.map((item: any, idx: number) => (
                   <div
-                    key={item.id}
-                    className={`relative overflow-hidden rounded-lg bg-neutral-900 ${
-                      item.span === "tall" ? "row-span-2" : ""
-                    }`}
+                    key={item._id}
+                    className={`relative overflow-hidden rounded-lg bg-neutral-900`}
                   >
                     <Image
-                      src={item.src}
+                      src={item.images}
                       fill
                       className="object-cover"
-                      alt={item.alt}
+                      alt={`images ${idx}`}
                       sizes="(max-width: 768px) 33vw, 300px"
                       loading="eager"
                     />
-                    {item.isVideo && (
+                    {/* {item.isVideo && (
                       <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/50">
                         <Play className="h-3 w-3 fill-white text-white" />
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>

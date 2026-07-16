@@ -5,11 +5,25 @@ const EXPRESS_API_URL = process.env.NEXT_PUBLIC_API_URL; // https://social-media
 
 export async function GET(req: NextRequest) {
   const cookie = req.headers.get("cookie");
+  const myPostParams = req.nextUrl.searchParams.get("myPost");
+  const imagesParams = req.nextUrl.searchParams.get("images");
+  const searchParams = new URLSearchParams();
 
-  const backendRes = await fetch(`${EXPRESS_API_URL}/api/posts`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", cookie: cookie ?? "" },
-  });
+  if (myPostParams === "true") {
+    searchParams.set("myPost", "true");
+  }
+
+  if (imagesParams === "true") {
+    searchParams.set("images", "true");
+  }
+
+  const backendRes = await fetch(
+    `${EXPRESS_API_URL}/api/posts?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", cookie: cookie ?? "" },
+    },
+  );
 
   const data = await backendRes.json();
   const res = NextResponse.json(data, { status: backendRes.status });
