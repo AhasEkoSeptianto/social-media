@@ -1,3 +1,4 @@
+import { socket } from "@/lib/socket";
 import useSWR from "swr";
 
 interface User {
@@ -39,6 +40,10 @@ export function useUser() {
     shouldRetryOnError: false, // jangan retry kalau 401 (belum login)
     refreshInterval: 5000,
   });
+
+  if (data?.user) {
+    socket.emit("login", data?.user?.id);
+  }
 
   return {
     user: data?.user,

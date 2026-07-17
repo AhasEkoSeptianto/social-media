@@ -70,7 +70,6 @@ export default function ActivityPage() {
     shouldRetryOnError: false,
   });
   const [loading, setLoading] = useState({ follow: "" });
-  console.log(data);
 
   const HandleFollow = async (following_id: string) => {
     setLoading((prev) => ({ ...prev, follow: following_id }));
@@ -78,7 +77,7 @@ export default function ActivityPage() {
       await following(following_id);
       mutate();
     } catch (error) {
-      console.log(error);
+      throw new Error("");
     }
 
     setLoading((prev) => ({ ...prev, follow: "" }));

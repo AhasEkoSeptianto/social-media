@@ -10,6 +10,7 @@ import { LoginFormData, loginSchema } from "@/lib/schemas/auth.schema";
 import { useUser } from "@/hooks/auths/useUser";
 import { useState } from "react";
 import { loginWithEmail, loginWithGoogle } from "@/lib/api/auth.api";
+import { socket } from "@/lib/socket";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function LoginForm() {
   async function handleGoogleSuccess(credential: string) {
     setServerError(null);
     try {
-      await loginWithGoogle(credential);
+      const user = await loginWithGoogle(credential);
       router.push("/");
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Login Google gagal");

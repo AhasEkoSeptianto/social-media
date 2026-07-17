@@ -11,8 +11,16 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { useUser } from "@/hooks/auths/useUser";
+import { nextFetcher } from "@/lib/fetcher";
+import { socket } from "@/lib/socket";
 import { Plus } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import dayjs from "@/lib/day";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 const dummyDataListChat = [
   {
@@ -54,6 +62,23 @@ const dummyDataListChat = [
 ];
 
 export default function MessagePage() {
+  const { user } = useUser();
+  const { data } = useSWR("/api/chat/list-chat", nextFetcher);
+  const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user?.id) {
+      socket.emit("get-friend-online", user.id);
+
+      socket.on("list_friend_online", (users) => {});
+
+      return () => {
+        socket.off("get-friend-online");
+      };
+    }
+  }, [user]);
+
   return (
     <SidebarProvider className="">
       <div className="hidden lg:block">
@@ -62,7 +87,39 @@ export default function MessagePage() {
       <div className="fixed bottom-0 left-0 z-30 lg:hidden">
         <NavigationMenuMobile />
       </div>
-      <main className="w-full grid grid-cols-12 p-4 gap-8 ">
+
+      {/* only phone devuce */}
+      <main className="container p-4 lg:hidden">
+        <Card className="min-h-[90vh] bg-brand">
+          <CardHeader>
+            <h1 className="text-xl">Message</h1>
+          </CardHeader>
+          <Separator className="h-4 w-full" />
+          <CardContent className="gap-4 divide-y">
+            {data?.data?.map((friend: any, idx: number) => (
+              <div
+                className="flex items-center space-x-4 p-2"
+                key={idx}
+                onClick={() => router.push(`/${friend?._id}/mobile`)}
+              >
+                <Avatar size="lg">
+                  <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-lg">{friend?.username ?? friend?.name}</p>
+                  <p className="text-white/70 truncate w-32">
+                    {/* {dayjs(friend.createdAt).fromNow()} */}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </main>
+
+      {/* only desktop */}
+      <main className="w-full grid grid-cols-12 p-4 gap-8 hidden lg:block ">
         <div className="col-span-2"></div>
         <div className="col-span-9 container space-y-8">
           <div className="grid grid-cols-12 gap-5">
@@ -70,9 +127,6 @@ export default function MessagePage() {
               <CardHeader className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl">Message</h1>
-                  {/* <Button variant="outline" className="cursor-pointer">
-                    <Plus />
-                  </Button> */}
                 </div>
                 <Field>
                   <ButtonGroup>
@@ -86,7 +140,35 @@ export default function MessagePage() {
               </CardHeader>
               <Separator className="mb-2 bg-white/10" />
               <CardContent className="overflow-auto scrollbar-thin">
-                {dummyDataListChat.map((chat, idx) => (
+                {data?.data?.map((friend: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between hover:bg-brand2 p-2 rounded-lg cursor-pointer"
+                    onClick={() => setSelectedConversation(friend)}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <Avatar size="lg">
+                        <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-lg">
+                          {friend?.username ?? friend?.name}
+                        </p>
+                        <p className="text-white/70 truncate w-32">
+                          {/* {dayjs(friend.createdAt).fromNow()} */}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {/* <p className="text-sm text-brand5">{chat.last_chat}</p>
+                      <Badge className="bg-brand5 text-white font-bold">
+                        {chat.total_unread_chat}
+                      </Badge> */}
+                    </div>
+                  </div>
+                ))}
+                {/* {dummyDataListChat.map((chat, idx) => (
                   <div
                     key={idx}
                     className="flex items-center justify-between hover:bg-brand2 p-2 rounded-lg cursor-pointer"
@@ -113,10 +195,17 @@ export default function MessagePage() {
                       </Badge>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </CardContent>
             </Card>
-            <ConversationMessage />
+            <ConversationMessage
+              avatarUrl={selectedConversation?.avatarUrl}
+              online_status="offline"
+              username={
+                selectedConversation?.username ?? selectedConversation?.name
+              }
+              key={selectedConversation?._id}
+            />
           </div>
         </div>
       </main>

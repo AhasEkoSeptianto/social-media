@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   Ellipse,
   Ellipsis,
   Images,
@@ -23,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Bubble, BubbleContent } from "../ui/bubble";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
+import { useRouter } from "next/navigation";
 
 const dummyChat = [
   {
@@ -174,23 +176,30 @@ const dummyChat = [
   },
 ];
 
-export default function ConversationMessage() {
+interface friendConversation {
+  avatarUrl: string;
+  username: string;
+  online_status: string;
+  with_back_button?: boolean;
+}
+export default function ConversationMessage(props: friendConversation) {
+  const router = useRouter();
   return (
     <MessageScrollerProvider autoScroll defaultScrollPosition="last-anchor">
       <Card className="col-span-8 bg-brand">
         <CardHeader className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Image
-              src={"/images/person1.avif"}
-              width={50}
-              height={50}
-              alt="prof"
-              className="rounded-full"
-            />
+            {props.with_back_button ? (
+              <ArrowLeft onClick={() => router.back()} />
+            ) : null}
+            <Avatar size="lg">
+              <AvatarImage src={props?.avatarUrl} alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
             <div>
-              <p className="text-lg">rover</p>
+              <p className="text-lg">{props.username}</p>
               <p className="text-white/70 truncate max-w-60 opacity-70">
-                offline
+                {props.online_status}
               </p>
             </div>
           </div>

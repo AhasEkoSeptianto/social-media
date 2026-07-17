@@ -5,8 +5,20 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { SWRConfig } from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { useSocketStore } from "@/store/socket.store";
+import { useEffect } from "react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
+  const connect = useSocketStore((s) => s.connect);
+  const disconnect = useSocketStore((s) => s.disconnect);
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
   return (
     <SWRConfig
       value={{
