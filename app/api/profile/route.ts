@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 const EXPRESS_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function PUT(req: NextRequest) {
-  const body = await req.json();
+  const formData = await req.formData();
   const cookie = req.headers.get("cookie");
   const backendRes = await fetch(`${EXPRESS_API_URL}/api/profile/update`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json", cookie: cookie ?? "" },
-    body: JSON.stringify(body),
+    headers: { cookie: cookie ?? "" },
+    body: formData,
   });
 
   const data = await backendRes.json();

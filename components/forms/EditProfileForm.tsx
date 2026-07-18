@@ -30,6 +30,7 @@ import { updateProfile } from "@/lib/api/profile.api";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/auths/useUser";
 import { Spinner } from "../ui/spinner";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function EditProfileForm() {
   const { user, mutate } = useUser();
@@ -45,15 +46,13 @@ export default function EditProfileForm() {
   const [openSheet, setOpenSheet] = useState(false);
   const [tagList, setTagList] = useState<any>([]);
   const [tempAddTag, setTempAddTag] = useState("");
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [previewImg, setPreviewImg] = useState<string>("");
+
   const onSubmit = async (data: updateProfileFormData) => {
     setLoading(true);
     try {
-      let resp = await updateProfile(
-        data.name,
-        data.image_url,
-        data.description,
-        tagList,
-      );
+      await updateProfile(data.name, imageUpload, data.description, tagList);
 
       toast.success("Success", { position: "top-center" });
       mutate();
@@ -68,12 +67,13 @@ export default function EditProfileForm() {
     reset({
       name: user?.username ?? user?.name,
       description: user?.bio,
-      image_url: user?.avatarUrl,
     });
-
+    setImageUpload(null);
+    setPreviewImg("");
     if (user?.tag) {
       setTagList(user?.tag);
     }
+
     setOpenSheet(open);
   };
 
@@ -89,7 +89,7 @@ export default function EditProfileForm() {
           </SheetHeader>
           <div>
             <div className="grid flex-1 auto-rows-min gap-6 px-4">
-              <div className="grid gap-3">
+              {/* <div className="grid gap-3">
                 <Label htmlFor="sheet-demo-name">Url profile picture</Label>
                 <Input
                   id="sheet-demo-name"
@@ -101,6 +101,25 @@ export default function EditProfileForm() {
                     {errors.image_url.message}
                   </p>
                 )}
+              </div> */}
+              <div className="flex items-center gap-5">
+                <Avatar size="lg">
+                  <AvatarImage
+                    src={previewImg || user?.avatarUrl}
+                    alt="user profile"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setImageUpload(file);
+                    setPreviewImg(URL.createObjectURL(file));
+                  }}
+                />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="sheet-demo-name">Username</Label>
