@@ -125,13 +125,19 @@ export default function ConversationMessage(props: friendConversation) {
                   >
                     {groupedMessages?.map((groupMessage: any, idx_grouped) => {
                       const isMe = groupMessage.senderId === user?.id;
+                      const isLastGroup =
+                        idx_grouped === groupedMessages.length - 1;
+                      const lastMessageInGroup =
+                        groupMessage.messages[groupMessage.messages.length - 1];
 
                       return (
-                        <Message
+                        <MessageScrollerItem
                           key={idx_grouped}
-                          align={isMe ? "end" : "start"}
+                          messageId={lastMessageInGroup._id}
+                          scrollAnchor={isLastGroup}
                         >
-                          {/* <MessageAvatar>
+                          <Message align={isMe ? "end" : "start"}>
+                            {/* <MessageAvatar>
                             <Avatar>
                               <AvatarImage
                                 src={groupMessage.sender?.avatarUrl}
@@ -140,62 +146,63 @@ export default function ConversationMessage(props: friendConversation) {
                               <AvatarFallback>R</AvatarFallback>
                             </Avatar>
                           </MessageAvatar> */}
-                          <MessageContent>
-                            <BubbleGroup>
-                              {groupMessage?.messages?.map(
-                                (msg: any, idx: number) => {
-                                  const time_send = dayjs(msg.createdAt);
-                                  const before_this_time_send = dayjs(
-                                    groupMessage?.messages[
-                                      idx === 0 ? 0 : idx - 1
-                                    ].createdAt,
-                                  );
-                                  const isInMinuteRange = Math.abs(
-                                    time_send.diff(before_this_time_send),
-                                  );
-                                  return (
-                                    <Bubble key={idx} className="">
-                                      <BubbleContent
-                                        className={`${isMe ? "!bg-brand5" : "!bg-brand4"} !text-white !text-md max-w-96`}
-                                      >
-                                        <p>{msg.text}</p>
-                                      </BubbleContent>
-                                      {groupMessage?.messages.length ===
-                                        idx + 1 ||
-                                      (!isInMinuteRange && idx !== 0) ? (
-                                        <MessageFooter>
-                                          <div
-                                            className={`flex items-center space-x-1 ${isMe ? "justify-end" : "justify-start"}`}
-                                          >
-                                            <p
-                                              className={`text-white/40 mt-1 ${isMe ? "text-right" : ""}`}
+                            <MessageContent>
+                              <BubbleGroup>
+                                {groupMessage?.messages?.map(
+                                  (msg: any, idx: number) => {
+                                    const time_send = dayjs(msg.createdAt);
+                                    const before_this_time_send = dayjs(
+                                      groupMessage?.messages[
+                                        idx === 0 ? 0 : idx - 1
+                                      ].createdAt,
+                                    );
+                                    const isInMinuteRange = Math.abs(
+                                      time_send.diff(before_this_time_send),
+                                    );
+                                    return (
+                                      <Bubble key={idx} className="">
+                                        <BubbleContent
+                                          className={`${isMe ? "!bg-brand5" : "!bg-brand4"} !text-white !text-md max-w-96`}
+                                        >
+                                          <p>{msg.text}</p>
+                                        </BubbleContent>
+                                        {groupMessage?.messages.length ===
+                                          idx + 1 ||
+                                        (!isInMinuteRange && idx !== 0) ? (
+                                          <MessageFooter>
+                                            <div
+                                              className={`flex items-center space-x-1 ${isMe ? "justify-end" : "justify-start"}`}
                                             >
-                                              {dayjs(msg.createdAt).format(
-                                                "HH:mm",
-                                              )}
-                                            </p>
-                                            {isMe ? (
-                                              <CheckCheck
-                                                size={13}
-                                                className={
-                                                  msg.readBy?.includes(
-                                                    props.participant_id,
-                                                  )
-                                                    ? "text-blue-400"
-                                                    : ""
-                                                }
-                                              />
-                                            ) : null}
-                                          </div>
-                                        </MessageFooter>
-                                      ) : null}
-                                    </Bubble>
-                                  );
-                                },
-                              )}
-                            </BubbleGroup>
-                          </MessageContent>
-                        </Message>
+                                              <p
+                                                className={`text-white/40 mt-1 ${isMe ? "text-right" : ""}`}
+                                              >
+                                                {dayjs(msg.createdAt).format(
+                                                  "HH:mm",
+                                                )}
+                                              </p>
+                                              {isMe ? (
+                                                <CheckCheck
+                                                  size={13}
+                                                  className={
+                                                    msg.readBy?.includes(
+                                                      props.participant_id,
+                                                    )
+                                                      ? "text-blue-400"
+                                                      : ""
+                                                  }
+                                                />
+                                              ) : null}
+                                            </div>
+                                          </MessageFooter>
+                                        ) : null}
+                                      </Bubble>
+                                    );
+                                  },
+                                )}
+                              </BubbleGroup>
+                            </MessageContent>
+                          </Message>
+                        </MessageScrollerItem>
                       );
                     })}
                   </MessageScrollerContent>
