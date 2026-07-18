@@ -107,7 +107,7 @@ export default function ConversationMessage(props: friendConversation) {
             </div>
           </CardHeader>
           <Separator className="mb-2 bg-white/10" />
-          <CardContent className="overflow-hidden h-[39rem] ">
+          <CardContent className="overflow-hidden h-[70vh] lg:h-[39rem] ">
             {!props.conversationId ? (
               <div className="h-full flex items-center justify-center text-white/50">
                 Pilih percakapan untuk mulai chat

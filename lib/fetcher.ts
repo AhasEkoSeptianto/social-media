@@ -5,6 +5,7 @@ type ApiOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   body?: unknown;
   headers?: Record<string, string>;
+  credentials?: string;
 };
 
 export const fetcher = async (url: string, options: ApiOptions = {}) => {
@@ -28,14 +29,19 @@ export const fetcher = async (url: string, options: ApiOptions = {}) => {
 };
 
 export const nextFetcher = async (url: string, options: ApiOptions = {}) => {
+  const isFormData = options.body instanceof FormData;
   const res = await fetch(`${url}`, {
     method: options.method ?? "GET",
     credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...options.headers,
     },
-    body: options.body ? JSON.stringify(options.body) : undefined,
+    body: options.body
+      ? isFormData
+        ? options.body
+        : JSON.stringify(options.body)
+      : undefined,
   });
 
   if (!res) {

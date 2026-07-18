@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Textarea } from "../ui/textarea";
-import { Camera, Images, XIcon } from "lucide-react";
+import { Images, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRef, useState } from "react";
 import {
@@ -17,24 +17,17 @@ import {
 } from "@/lib/schemas/post.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPost } from "@/lib/api/posts.api";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { usePosts } from "@/hooks/posts/usePosts";
+import { Spinner } from "../ui/spinner";
+import { useUser } from "@/hooks/auths/useUser";
 
 export default function PostStory() {
-  const [imageurl, setImageUrl] = useState("");
-  const { posts, isLoading, mutate } = usePosts();
+  const [imageurl, setImageUrl] = useState<string | null>(null);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const { mutate } = usePosts();
+  const { user } = useUser();
   const {
     register,
     handleSubmit,
@@ -48,21 +41,24 @@ export default function PostStory() {
   });
 
   const onSubmit = async (data: CreatePostFormData) => {
+    setLoadingSubmit(true);
     try {
       const resp = await createPost({
         content: data.context,
-        image_url: imageurl,
+        image: refInputImage.current?.files?.[0],
       });
-      console.log(resp);
       toast.success("Success create post", { position: "top-center" });
-      setImageUrl("");
+      setImageUrl(null);
       reset();
       mutate();
     } catch (err) {
       console.log(err);
       // setServerError(err instanceof Error ? err.message : "Login gagal");
     }
+    setLoadingSubmit(false);
   };
+
+  const refInputImage = useRef<any>(null);
   return (
     <Card className="bg-brand p-4 text-white">
       <CardContent>
@@ -72,7 +68,7 @@ export default function PostStory() {
         >
           <div className="rounded-full p-[2px] bg-[#0d0d12]">
             <Image
-              src={"/images/person3.avif"}
+              src={user?.avatarUrl || "/images/person3.avif"}
               width={80}
               height={80}
               alt="prof"
@@ -104,7 +100,7 @@ export default function PostStory() {
                 <AttachmentActions>
                   <AttachmentAction
                     aria-label={`Remove image post`}
-                    onClick={() => setImageUrl("")}
+                    onClick={() => setImageUrl(null)}
                   >
                     <XIcon />
                   </AttachmentAction>
@@ -113,24 +109,35 @@ export default function PostStory() {
             ) : null}
           </div>
           <div className="flex items-center space-x-3">
-            <GetDialogImage
-              disabled={false}
-              onAttach={(url) => setImageUrl(url)}
-            />
-            {/* <Button
+            <Button
               size="icon"
               aria-label="Submit"
               variant="outline"
-              className="bg-brand hover:bg-brand2 hover:cursor-pointer"
+              onClick={() => refInputImage.current?.click()}
+              className={`bg-brand hover:bg-brand2 hover:cursor-pointer`}
             >
-              <Camera className="text-white" />
-            </Button> */}
+              <Images className="text-white" />
+            </Button>
+            <Input
+              className="hidden"
+              type="file"
+              accept="image/*"
+              ref={refInputImage}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const previewImg = URL.createObjectURL(file);
+                setImageUrl(previewImg);
+              }}
+            />
+
             <Button
               variant="secondary"
               className="bg-brand5 text-white font-bold hover:bg-highlight3 cursor-pointer"
+              disabled={loadingSubmit}
               type="submit"
             >
-              Post
+              {loadingSubmit ? <Spinner /> : "Post"}
             </Button>
           </div>
         </form>
@@ -138,73 +145,3 @@ export default function PostStory() {
     </Card>
   );
 }
-
-interface GetDialogImage {
-  disabled: boolean;
-  onAttach: (url: string) => void;
-}
-const GetDialogImage = (props: GetDialogImage) => {
-  const [urlImage, setUrlImage] = useState("");
-  const [open, setOpen] = useState(false);
-  return (
-    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-      <DialogTrigger
-        render={
-          <Button
-            size="icon"
-            aria-label="Submit"
-            variant="outline"
-            onClick={() => setOpen(true)}
-            className={`bg-brand hover:bg-brand2 ${props.disabled ? "" : "hover:cursor-pointer"}`}
-          >
-            <Images className="text-white" />
-          </Button>
-        }
-      />
-      <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
-          <DialogDescription>
-            Share post with a link image url
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex items-center gap-2">
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="link" className="sr-only">
-              Link
-            </Label>
-            <Input
-              id="link"
-              placeholder="https://"
-              onChange={(e) => setUrlImage(e.target.value)}
-            />
-          </div>
-        </div>
-        <DialogFooter className="">
-          <DialogClose
-            render={
-              <Button
-                variant="ghost"
-                type="button"
-                onClick={() => setOpen(false)}
-              >
-                Close
-              </Button>
-            }
-          />
-
-          <Button
-            className="bg-brand5 text-white"
-            type="button"
-            onClick={() => {
-              props.onAttach(urlImage);
-              setOpen(false);
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};

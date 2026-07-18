@@ -21,12 +21,17 @@ export async function getPostById(id: string): Promise<CreatePostFormData> {
 
 export async function createPost(data: {
   content: string;
-  image_url: string;
+  image: File;
 }): Promise<CreatePostFormData> {
+  const formData = new FormData();
+
+  formData.append("content", data.content);
+  formData.append("image", data.image);
+
   const res = await nextFetcher(`/api/posts/create`, {
+    credentials: "include",
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: data,
+    body: formData,
   });
   if (!res.success) throw new Error("Gagal membuat post");
 
