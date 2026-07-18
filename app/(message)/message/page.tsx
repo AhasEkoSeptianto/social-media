@@ -14,6 +14,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { useUser } from "@/hooks/auths/useUser";
 import { nextFetcher } from "@/lib/fetcher";
 import { socket } from "@/lib/socket";
+import { startConversation } from "@/lib/api/chat.api";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -65,8 +66,21 @@ export default function MessagePage() {
   const { user } = useUser();
   const { data } = useSWR("/api/chat/list-chat", nextFetcher);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const [selectedConversationId, setSelectedConversationId] = useState<
+    string | null
+  >(null);
   const [listOnlineFriendIds, setListOnlineFriendIds] = useState<string[]>([]);
   const router = useRouter();
+
+  async function handleSelectFriend(friend: any) {
+    setSelectedConversation(friend);
+    try {
+      const conversation = await startConversation(friend._id);
+      setSelectedConversationId(conversation._id);
+    } catch (err) {
+      console.error("Gagal memulai percakapan:", err);
+    }
+  }
 
   useEffect(() => {
     if (user?.id) {
@@ -148,7 +162,7 @@ export default function MessagePage() {
                   <div
                     key={idx}
                     className="flex items-center justify-between hover:bg-brand2 p-2 rounded-lg cursor-pointer"
-                    onClick={() => setSelectedConversation(friend)}
+                    onClick={() => handleSelectFriend(friend)}
                   >
                     <div className="flex items-center space-x-4">
                       <div className="relative">
@@ -208,12 +222,14 @@ export default function MessagePage() {
               </CardContent>
             </Card>
             <ConversationMessage
+              conversationId={selectedConversationId}
               avatarUrl={selectedConversation?.avatarUrl}
               online_status="offline"
               username={
                 selectedConversation?.username ?? selectedConversation?.name
               }
               key={selectedConversation?._id}
+              participant_id={selectedConversation?._id}
             />
           </div>
         </div>
