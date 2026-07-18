@@ -65,13 +65,17 @@ export default function MessagePage() {
   const { user } = useUser();
   const { data } = useSWR("/api/chat/list-chat", nextFetcher);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const [listOnlineFriendIds, setListOnlineFriendIds] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     if (user?.id) {
       socket.emit("get-friend-online", user.id);
 
-      socket.on("list_friend_online", (users) => {});
+      socket.on("list_friend_online", (usersIds) => {
+        console.log(usersIds);
+        setListOnlineFriendIds(usersIds);
+      });
 
       return () => {
         socket.off("get-friend-online");
@@ -147,10 +151,15 @@ export default function MessagePage() {
                     onClick={() => setSelectedConversation(friend)}
                   >
                     <div className="flex items-center space-x-4">
-                      <Avatar size="lg">
-                        <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
+                      <div className="relative">
+                        <Avatar size="lg">
+                          <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        {listOnlineFriendIds.includes(friend?._id) ? (
+                          <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-success z-50"></div>
+                        ) : null}
+                      </div>
                       <div>
                         <p className="text-lg">
                           {friend?.username ?? friend?.name}
