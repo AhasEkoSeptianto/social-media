@@ -1,9 +1,10 @@
 // lib/fetcher.ts
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+type JsonBody = Record<string, unknown>;
 type ApiOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  body?: unknown;
+  body?: JsonBody | FormData;
   headers?: Record<string, string>;
   credentials?: string;
 };
@@ -30,18 +31,24 @@ export const fetcher = async (url: string, options: ApiOptions = {}) => {
 
 export const nextFetcher = async (url: string, options: ApiOptions = {}) => {
   const isFormData = options.body instanceof FormData;
+  const body =
+    options.body instanceof FormData
+      ? options.body
+      : options.body
+        ? JSON.stringify(options.body)
+        : undefined;
+
+  const headers = {
+    ...(options.body instanceof FormData
+      ? {}
+      : { "Content-Type": "application/json" }),
+    ...options.headers,
+  };
   const res = await fetch(`${url}`, {
     method: options.method ?? "GET",
     credentials: "include",
-    headers: {
-      ...(isFormData ? {} : { "Content-Type": "application/json" }),
-      ...options.headers,
-    },
-    body: options.body
-      ? isFormData
-        ? options.body
-        : JSON.stringify(options.body)
-      : undefined,
+    headers,
+    body,
   });
 
   if (!res) {
