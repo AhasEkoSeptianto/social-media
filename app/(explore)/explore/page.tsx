@@ -16,6 +16,7 @@ import { nextFetcher } from "@/lib/fetcher";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
+import { useDebouncedCallback } from "use-debounce";
 
 const tagMenu = [
   "All",
@@ -55,6 +56,8 @@ export default function ExplorePage() {
     setLoading((prev) => ({ follow: "" }));
   };
 
+  const searchDebounce = useDebouncedCallback((value) => setSearch(value), 500);
+
   return (
     <SidebarProvider className="">
       <div className="hidden lg:block">
@@ -71,7 +74,7 @@ export default function ExplorePage() {
               <Input
                 type="search"
                 placeholder="Search people,tag,place"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => searchDebounce(e.target.value)}
               />
               <Button variant="secondary" className="bg-brand5">
                 Search
