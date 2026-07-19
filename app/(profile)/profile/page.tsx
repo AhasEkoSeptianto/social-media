@@ -5,16 +5,10 @@ import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import { AppSidebar } from "@/components/shared/Sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/auths/useUser";
 import { logout } from "@/lib/api/auth.api";
@@ -31,7 +25,6 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 interface ExploreItem {
   id: string;
   src: string;
@@ -54,14 +47,21 @@ export default function ProfilePage() {
   const router = useRouter();
   const { user, mutate } = useUser();
   const [onSetting, setOnSetting] = useState(false);
+  const [loading, setLoading] = useState({
+    getPost: true,
+    logoutMobile: false,
+  });
   const onLogout = async () => {
+    setLoading((prev) => ({ ...prev, logoutMobile: true }));
     await logout();
     await mutate();
     router.push("/login");
+    setLoading((prev) => ({ ...prev, logoutMobile: false }));
   };
   const [myPostList, setMyPostList] = useState([]);
 
-  const getProfile = async () => {
+  const getMyPost = async () => {
+    setLoading((prev) => ({ ...prev, getPost: true }));
     const myPost = await nextFetcher(`/api/posts/get?myPost=true&images=true`, {
       method: "GET",
       headers: {
@@ -70,10 +70,11 @@ export default function ProfilePage() {
     }).then((resp) => {
       setMyPostList(resp?.data?.posts);
     });
+    setLoading((prev) => ({ ...prev, getPost: false }));
   };
 
   useEffect(() => {
-    getProfile();
+    getMyPost();
   }, []);
   if (onSetting) {
     return (
@@ -88,7 +89,7 @@ export default function ProfilePage() {
           onClick={onLogout}
         >
           <LogOut />
-          <p>Keluar</p>
+          <p>{loading.logoutMobile ? <Spinner /> : "Keluar"} </p>
         </div>
       </div>
     );
@@ -115,16 +116,13 @@ export default function ProfilePage() {
           <div className="relative h-70">
             <div className="bg-[url(/images/post1.avif)] rounded-lg w-full h-60 bg-cover">
               <div className="absolute bottom-0 left-10">
-                <Image
-                  src={
-                    user?.avatarUrl ||
-                    "https://fastly.picsum.photos/id/217/200/300.jpg?hmac=3GPQ-pPnL4D8miCKA0qNqIg4zr5Ponvl9OVH83CeGuc"
-                  }
-                  width={150}
-                  height={150}
-                  alt="prof"
-                  className="rounded-full"
-                />
+                {user?.avatarUrl ? (
+                  <div className="h-32 w-32 rounded-full relative overflow-hidden">
+                    <Image src={user?.avatarUrl} alt="prof" fill={true} />
+                  </div>
+                ) : (
+                  <Skeleton className="h-32 w-32 rounded-full" />
+                )}
               </div>
             </div>
           </div>
@@ -132,12 +130,17 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="lg:flex justify-between items-center space-x-2">
-                <h1 className="text-2xl lg:text-4xl lg:min-w-36">
-                  {user?.username ?? user?.name}
-                </h1>
+                {user?.name ? (
+                  <h1 className="text-2xl lg:text-4xl lg:min-w-36">
+                    {user?.username ?? user?.name}
+                  </h1>
+                ) : (
+                  <Skeleton className="h-10 w-40 mt-2" />
+                )}
                 <EditProfileForm />
               </div>
               <p>{user?.bio}</p>
+
               <div className="space-x-2">
                 {user?.tag
                   ? user?.tag.map((val: string, idx: number) => (
@@ -185,7 +188,11 @@ export default function ProfilePage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="preview">
-              {myPostList?.length === 0 ? (
+              {loading.getPost ? (
+                <div className="place-content-center h-96 w-full">
+                  <Spinner className="mx-auto size-8" />
+                </div>
+              ) : myPostList?.length === 0 ? (
                 <div className="place-content-center h-96 w-full">
                   <Camera className="mx-auto" size={100} />
                   <p className="text-center text-2xl">No Share Photos</p>

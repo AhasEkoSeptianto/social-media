@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import dayjs from "@/lib/day";
 import CommentPostForm from "@/components/forms/CommentPostForm";
 import Comment from "../comment/Comment";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Feed(props: FeedTypes) {
   const { user, mutate } = useUser();
@@ -58,6 +59,7 @@ export default function Feed(props: FeedTypes) {
     setLoading((prev) => ({ ...prev, like: true }));
     try {
       await likePost(props._id);
+      console.log("updated");
       mutatePost();
     } catch (error) {
       console.log(error);
@@ -70,13 +72,14 @@ export default function Feed(props: FeedTypes) {
     <Card className="bg-brand text-white">
       <CardHeader className="flex items-start justify-between">
         <div className="flex items-center space-x-4">
-          <Image
-            src={props.author.avatarUrl}
-            width={40}
-            height={40}
-            alt="prof"
-            className="rounded-full"
-          />
+          <Avatar size="lg">
+            <AvatarImage
+              src={props.author.avatarUrl}
+              alt={`profile ${props.author.avatarUrl}`}
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+
           <div>
             <p className="text-lg">{props.author.name}</p>
             <p className="opacity-50"> {dayjs(props.createdAt).fromNow()}</p>
