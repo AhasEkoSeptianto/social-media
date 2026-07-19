@@ -15,9 +15,19 @@ import SuggestedSection from "@/components/shared/SuggestedSection";
 import { usePosts } from "@/hooks/posts/usePosts";
 import NavigationMenuMobile from "@/components/shared/NavigationMenuMobile";
 import LoadingFeed from "@/components/freatures/feed/LoadingFeed";
+import { useInfiniteScrollTrigger } from "@/hooks/auths/useInfinityScrollTrigger";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Home() {
-  const { posts, isLoading, mutate } = usePosts();
+  const { posts, isLoading, isLoadingMore, isReachingEnd, loadMore } =
+    usePosts();
+
+  const sentinelRef = useInfiniteScrollTrigger({
+    onLoadMore: loadMore,
+    hasMore: !isReachingEnd,
+    isLoading: isLoadingMore,
+  });
+
   return (
     <SidebarProvider>
       <div className="hidden lg:block">
@@ -35,9 +45,20 @@ export default function Home() {
             ? Array.from({ length: 4 }).map((_, idx) => (
                 <LoadingFeed key={idx} />
               ))
-            : posts?.data?.posts.map((post: FeedTypes) => (
-                <Feed key={post._id} {...post} />
-              ))}
+            : posts.map((post: FeedTypes, idx) => <Feed key={idx} {...post} />)}
+
+          {/* Elemen sentinel -- kosong secara visual, cuma dipakai untuk deteksi scroll */}
+          <div ref={sentinelRef} className="h-4" />
+
+          {isLoadingMore && (
+            <div className="flex justify-center py-4">
+              <Spinner />
+            </div>
+          )}
+
+          {isReachingEnd && posts.length > 0 && (
+            <p className="text-center text-white/50 py-4">end the posts</p>
+          )}
         </div>
 
         <div className="hidden lg:block col-span-3 py-4 space-y-4">

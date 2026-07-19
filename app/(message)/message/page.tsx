@@ -65,6 +65,7 @@ const dummyDataListChat = [
 export default function MessagePage() {
   const { user } = useUser();
   const { data } = useSWR("/api/chat/list-chat", nextFetcher);
+  console.log(data);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
@@ -120,10 +121,15 @@ export default function MessagePage() {
                 key={idx}
                 onClick={() => router.push(`/${friend?._id}/mobile`)}
               >
-                <Avatar size="lg">
-                  <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar size="lg">
+                    <AvatarImage src={friend?.avatarUrl} alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  {listOnlineFriendIds.includes(friend?._id) ? (
+                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-success z-50"></div>
+                  ) : null}
+                </div>
                 <div>
                   <p className="text-lg">{friend?.username ?? friend?.name}</p>
                   <p className="text-white/70 truncate w-32">
@@ -224,7 +230,11 @@ export default function MessagePage() {
             <ConversationMessage
               conversationId={selectedConversationId}
               avatarUrl={selectedConversation?.avatarUrl}
-              online_status="offline"
+              online_status={
+                listOnlineFriendIds.includes(selectedConversation?._id)
+                  ? "online"
+                  : "offline"
+              }
               username={
                 selectedConversation?.username ?? selectedConversation?.name
               }
