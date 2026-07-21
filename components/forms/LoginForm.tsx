@@ -68,7 +68,7 @@ export default function LoginForm() {
           noValidate
         >
           <Input
-            placeholder="Email adress"
+            placeholder="Email address"
             {...register("email")}
             aria-invalid={errors.email ? "true" : "false"}
           />
@@ -97,6 +97,9 @@ export default function LoginForm() {
           >
             {isSubmitting ? "Processing..." : "Sign in"}
           </Button>
+          {serverError && (
+            <p className="text-center text-danger">{serverError}</p>
+          )}
         </form>{" "}
       </div>
     </div>

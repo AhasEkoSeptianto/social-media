@@ -1,0 +1,12 @@
+import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
+import { routerMock } from "./testing/mocks/router";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => routerMock,
+}));
+
+vi.mock("@react-oauth/google", () => ({
+  GoogleLogin: () => <button>Google Login</button>,
+  GoogleOAuthProvider: ({ children }: any) => children,
+}));

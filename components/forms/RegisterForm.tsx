@@ -84,7 +84,7 @@ export default function RegisterForm(props: props) {
             <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>
           )}
           <Input
-            placeholder="Email adress"
+            placeholder="Email address"
             {...register("email")}
             aria-invalid={errors.email ? "true" : "false"}
           />
