@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const createPostSchema = z.object({
-  context: z.string().min(1, "Post wajib diisi"),
+  content: z.string().min(1, "Post wajib diisi"),
+  image: z.instanceof(File).optional(),
 });
 
 export type CreatePostFormData = z.infer<typeof createPostSchema>;

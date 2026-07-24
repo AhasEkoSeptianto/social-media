@@ -3,18 +3,17 @@ import { vi, test, beforeEach } from "vitest";
 import LoginForm from "@/components/forms/LoginForm";
 import userEvent from "@testing-library/user-event";
 import * as authApi from "@/lib/api/auth.api";
-import { pushMock } from "./mocks/router";
-import RegisterForm from "@/components/forms/RegisterForm";
+import { pushMock } from "../mocks/router";
 
 // setup agar bisa memangil api login route
 vi.mock("@/lib/api/auth.api", () => ({
   loginWithEmail: vi.fn(),
-  registerAccount: vi.fn(),
 }));
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
+
 test("authenticate_login_email_success", async () => {
   const user = userEvent.setup();
   vi.mocked(authApi.loginWithEmail).mockResolvedValue({
@@ -67,46 +66,5 @@ test("authenticate_login_email_failed", async () => {
     expect(pushMock).not.toHaveBeenCalled();
 
     expect(screen.getByText("Email atau password salah")).toBeInTheDocument();
-  });
-});
-
-test("register_success", async () => {
-  const user = userEvent.setup();
-  vi.mocked(authApi.registerAccount).mockResolvedValue({
-    success: true,
-  });
-
-  function getRandom(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-
-  render(<RegisterForm onSuccess={() => {}} />);
-  const name = `testing_${getRandom(1000)}`;
-  const email = `testing_${getRandom(1000)}@gmail.com`;
-  const password = "qweqweqwe";
-
-  await user.type(screen.getByPlaceholderText(/Name/i), name);
-  await user.type(screen.getByPlaceholderText(/Email Address/i), email);
-
-  await user.type(
-    screen.getByPlaceholderText("Password", { exact: true }),
-    password.toString(),
-  );
-  await user.type(
-    screen.getByPlaceholderText("Confirm password", { exact: true }),
-    password.toString(),
-  );
-
-  await user.click(screen.getByRole("button", { name: /Register/i }));
-
-  await waitFor(() => {
-    expect(authApi.registerAccount).toHaveBeenCalledWith({
-      name: name,
-      email: email,
-      password: password,
-      confirmPassword: password,
-    });
-
-    // expect(pushMock).toHaveBeenCalledWith("/login");
   });
 });

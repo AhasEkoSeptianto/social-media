@@ -65,7 +65,7 @@ export default function Feed(props: FeedTypes) {
       console.log(error);
     }
 
-    setLoading((prev) => ({ ...prev, like: true }));
+    setLoading((prev) => ({ ...prev, like: false }));
   };
 
   return (
@@ -88,18 +88,28 @@ export default function Feed(props: FeedTypes) {
         {user?.id === props.author._id ? (
           <Popover>
             <PopoverTrigger
-              render={<Button className="cursor-pointer" variant="ghost" />}
+              render={
+                <Button
+                  aria-label="Popover options post"
+                  className="cursor-pointer"
+                  variant="ghost"
+                />
+              }
             >
               <Ellipsis />
             </PopoverTrigger>
             <PopoverContent align="start" className="w-42 px-0">
               <div className=" ">
-                <p
-                  className="p-2 hover:bg-brand2/20 text-danger cursor-pointer font-bold"
+                <Button
+                  aria-label="Delete post"
+                  variant="ghost"
+                  className="p-2  text-danger cursor-pointer font-bold w-full"
                   onClick={() => deletePostFunction()}
                 >
-                  {loading.delete ? <Spinner /> : "Delete"}
-                </p>
+                  <span className="text-left w-full">
+                    {loading.delete ? <Spinner /> : "Delete"}
+                  </span>
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
@@ -123,6 +133,7 @@ export default function Feed(props: FeedTypes) {
           <Button
             variant="ghost"
             className="cursor-pointer text-lg"
+            aria-label="Like post"
             onClick={handleLikePost}
           >
             <Heart

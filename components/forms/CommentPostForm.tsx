@@ -46,7 +46,7 @@ export default function CommentPostForm(props: props) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Input placeholder="comment.." {...register("content")} />
-        <Button type="submit" variant="ghost">
+        <Button type="submit" variant="ghost" aria-label="Submit comment">
           {loading ? <Spinner /> : <SendHorizonal />}
         </Button>
       </form>

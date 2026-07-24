@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { usePosts } from "@/hooks/posts/usePosts";
 import { Spinner } from "../ui/spinner";
 import { useUser } from "@/hooks/auths/useUser";
+import { Field, FieldLabel } from "../ui/field";
 
 export default function PostStory() {
   const [imageurl, setImageUrl] = useState<string | null>(null);
@@ -36,7 +37,7 @@ export default function PostStory() {
   } = useForm<CreatePostFormData>({
     resolver: zodResolver(createPostSchema),
     defaultValues: {
-      context: "",
+      content: "",
     },
   });
 
@@ -44,7 +45,7 @@ export default function PostStory() {
     setLoadingSubmit(true);
     try {
       const resp = await createPost({
-        content: data.context,
+        content: data.content,
         image: refInputImage.current?.files?.[0],
       });
       toast.success("Success create post", { position: "top-center" });
@@ -78,12 +79,12 @@ export default function PostStory() {
           <div className="space-y-2 w-full">
             <Textarea
               placeholder="whats on your mind?"
-              {...register("context")}
-              aria-invalid={errors.context ? "true" : "false"}
+              {...register("content")}
+              aria-invalid={errors.content ? "true" : "false"}
             />
-            {errors.context && (
+            {errors.content && (
               <p className="text-xs text-red-500 mt-1">
-                {errors.context.message}
+                {errors.content.message}
               </p>
             )}
 
@@ -118,18 +119,24 @@ export default function PostStory() {
             >
               <Images className="text-white" />
             </Button>
-            <Input
-              className="hidden"
-              type="file"
-              accept="image/*"
-              ref={refInputImage}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                const previewImg = URL.createObjectURL(file);
-                setImageUrl(previewImg);
-              }}
-            />
+            <Field>
+              <FieldLabel htmlFor="upload-new-post" className="hidden">
+                Upload file Posts:
+              </FieldLabel>
+              <Input
+                className="hidden"
+                id="upload-new-post"
+                type="file"
+                accept="image/*"
+                ref={refInputImage}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const previewImg = URL.createObjectURL(file);
+                  setImageUrl(previewImg);
+                }}
+              />
+            </Field>
 
             <Button
               variant="secondary"
